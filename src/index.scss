@@ -1,0 +1,17 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 14px;
+}
+
+.slider-page {
+  max-width: 80%;
+  margin: 9rem auto 0;
+  &__slider-container {
+    border: 0.1rem dashed red;
+  }
+}
