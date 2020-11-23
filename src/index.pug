@@ -1,3 +1,5 @@
+include slider/slider
+
 doctype html
 html(lang="en")
   head
@@ -12,9 +14,12 @@ html(lang="en")
     link(rel="mask-icon", href="src/favicons/safari-pinned-tab.svg", color="#5bbad5")
     meta(name="msapplication-TileColor", content="#da532c")
     meta(name="theme-color", content="#ffffff")
-    title FSD UI-kit
+    title Slider
 body
   .slider-page.js-slider-page
-    .slider-page__slider-container.js-slider-page__slider-container
-    .slider-page__slider-container.js-slider-page__slider-container
-    .slider-page__slider-container.js-slider-page__slider-container
+    .slider-page__slider-container.slider-page__slider-container-first.js-slider-page__slider-container
+      +slider()
+    .slider-page__slider-container.slider-page__slider-container-second.js-slider-page__slider-container
+      +slider()
+    .slider-page__slider-container.slider-page__slider-container-third.js-slider-page__slider-container
+      +slider()

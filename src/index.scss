@@ -12,6 +12,19 @@ html {
   max-width: 80%;
   margin: 9rem auto 0;
   &__slider-container {
-    border: 0.1rem dashed red;
+    // border: 0.05rem dashed red;
+    padding-bottom: 5rem;
+  }
+  &__slider-container-first {
+    width: 23.1%;
+    height: 0.65rem;
+  }
+  &__slider-container-second {
+    width: 50%;
+    height: 1rem;
+  }
+  &__slider-container-third {
+    width: 80%;
+    height: 3rem;
   }
 }
