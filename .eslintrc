@@ -11,7 +11,8 @@
     "fsd/split-conditionals": "error",
     "no-console": "off",
     "no-underscore-dangle": "off",
-    "no-new": "off"
+    "no-new": "off",
+    "no-unused-vars": "error"
   },
   "env": {
     "browser": true,

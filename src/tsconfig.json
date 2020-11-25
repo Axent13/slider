@@ -7,8 +7,8 @@
     "strict": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true,
-    // "noUncheckedIndexedAccess": true, - выдает ошибку, мол, нет такого свойства...
+    // "noUncheckedIndexedAccess": true, // - выдает ошибку, мол, нет такого свойства...
     "noUnusedLocals": true,
-    "noUnusedParameters": true
+    // "noUnusedParameters": true, //- пока что убрал. Непонятно, как использовать тот же самый each для перебора jQuery-элементов, так как он первым параметром требует index, который не нужен
   }
 }

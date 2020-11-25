@@ -1,9 +1,14 @@
 class Slider {
-  $rootElement: any;
-  constructor($rootElement: any) {
+  $rootElement: HTMLElement | JQuery<HTMLElement>;
+  $startPointElement: HTMLElement | JQuery<HTMLElement>;
+  $endPointElement: HTMLElement | JQuery<HTMLElement>;
+  $rangeLine: HTMLElement | JQuery<HTMLElement>;
+  
+  constructor($rootElement: HTMLElement) {
     this.$rootElement = $rootElement;
-    console.log('Slider constructor');
-    console.log(this.$rootElement);
+    this.$rangeLine = $(this.$rootElement).find('.js-slider__range-line');
+    this.$startPointElement = $(this.$rootElement).find('.js-slider__point_position_start');
+    this.$endPointElement = $(this.$rootElement).find('.js-slider__point_position_end');
   }
 }
 

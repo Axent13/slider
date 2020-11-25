@@ -10,6 +10,6 @@ requireAllFiles(require.context('./', true, /^\.\/.*\.(scss|js)$/));
 const $rootElement = $('.js-slider-page');
 const $sliderContainers = $rootElement.find('.js-slider-page__slider-container');
 
-$sliderContainers.each((node) => {
+$sliderContainers.each((index, node) => {
   new Slider(node);
 });
