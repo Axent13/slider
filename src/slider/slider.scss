@@ -8,17 +8,18 @@
     border-radius: 0.3rem;
   }
   &__range-line {
+    display: flex;
+    align-items: center;
     position: absolute;
     top: 0;
     left: 31%;
-    width: 32.5%;
+    right: 62.5%;
     height: inherit;
     background: linear-gradient(180deg, #6FCF97 0%, #66D2EA 100%);
     border-radius: 0.3rem;
   }
   &__point {
     position: absolute;
-    top: 0;
     width: 1rem;
     height: 1rem;
     background: linear-gradient(180deg, #6FCF97 0%, #66D2EA 100%);
@@ -26,10 +27,12 @@
     border-radius: 50%;
     &_position {
       &_start {
-        left: 29%;
+        left: 0;
+        transform: translateX(-50%);
       }
       &_end {
-        left: 61.5%;
+        right: 0;
+        transform: translateX(50%);
       }
     }
   }

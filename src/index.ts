@@ -1,5 +1,5 @@
 import './favicons/favicons';
-import Slider from './slider';
+import Slider from './slider/slider.ts';
 
 const requireAllFiles = function requireAll(requireContext: __WebpackModuleApi.RequireContext) {
   return requireContext.keys().map(requireContext);
