@@ -1,3 +1,4 @@
+/* eslint-disable func-names */
 /* eslint-disable class-methods-use-this */
 /* eslint-disable no-unused-vars */
 class Slider {
@@ -50,7 +51,13 @@ class Slider {
     console.log('Тянем-потянем! левый');
     const sliderStartCoordinate = $(this.$rootElement).offset().left;
     const newPosition = event.pageX - sliderStartCoordinate;
-    if (newPosition >= 0) {
+    const endPointCoordinate = $(this.$rootElement).width() - parseInt($(this.$rangeLine).css('right'), 10);
+
+    if (newPosition <= 0) {
+      $(this.$rangeLine).css('left', '0px');
+    } else if (newPosition >= endPointCoordinate) {
+      $(this.$rangeLine).css('left', `${endPointCoordinate - 5}px`); // "- 5" - это временно, для наглядности
+    } else {
       $(this.$rangeLine).css('left', `${newPosition}px`);
     }
   }
@@ -70,7 +77,13 @@ class Slider {
     console.log('Тянем-потянем! правый');
     const sliderEndCoordinate = $(this.$rootElement).offset().left + $(this.$rootElement).width();
     const newPosition = sliderEndCoordinate - event.pageX;
-    if (newPosition >= 0) {
+    const startPointCoordinate = $(this.$rootElement).width() - parseInt($(this.$rangeLine).css('left'), 10);
+
+    if (newPosition <= 0) {
+      $(this.$rangeLine).css('right', '0px');
+    } else if (newPosition >= startPointCoordinate) {
+      $(this.$rangeLine).css('right', `${startPointCoordinate - 5}px`); // "- 5" - это временно, для наглядности
+    } else {
       $(this.$rangeLine).css('right', `${newPosition}px`);
     }
   }
