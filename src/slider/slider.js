@@ -1,6 +1,3 @@
-/* eslint-disable func-names */
-/* eslint-disable class-methods-use-this */
-/* eslint-disable no-unused-vars */
 class Slider {
   constructor($rootElement) {
     this.$rootElement = $rootElement;
@@ -42,7 +39,7 @@ class Slider {
     }
   }
 
-  _handleStartPointMouseDown(event) {
+  _handleStartPointMouseDown() {
     $(document).on('mousemove', this._handleStartPointMouseMove);
     $(document).on('mouseup', this._handleStartPointMouseUp);
   }
@@ -62,13 +59,12 @@ class Slider {
     }
   }
 
-  _handleStartPointMouseUp(event) {
+  _handleStartPointMouseUp() {
     $(document).off('mousemove', this._handleStartPointMouseMove);
     $(document).off('mouseup', this._handleStartPointMouseUp);
-    console.log('mouse up! левый');
   }
 
-  _handleEndPointMouseDown(event) {
+  _handleEndPointMouseDown() {
     $(document).on('mousemove', this._handleEndPointMouseMove);
     $(document).on('mouseup', this._handleEndPointMouseUp);
   }
@@ -88,10 +84,9 @@ class Slider {
     }
   }
 
-  _handleEndPointMouseUp(event) {
+  _handleEndPointMouseUp() {
     $(document).off('mousemove', this._handleEndPointMouseMove);
     $(document).off('mouseup', this._handleEndPointMouseUp);
-    console.log('mouse up! правый');
   }
 
   _initEventListeners() {
