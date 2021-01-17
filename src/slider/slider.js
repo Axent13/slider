@@ -4,6 +4,11 @@ class Slider {
     this.$rangeLine = $(this.$rootElement).find('.js-slider__range-line');
     this.$startPointElement = $(this.$rootElement).find('.js-slider__point_position_start');
     this.$endPointElement = $(this.$rootElement).find('.js-slider__point_position_end');
+    this.$startValueElement = $(this.$rootElement).find('.js-slider__value_position_start');
+    this.$endValueElement = $(this.$rootElement).find('.js-slider__value_position_end');
+
+    this.$startValueElement.text(parseInt($(this.$rangeLine).css('left'), 10));
+    this.$endValueElement.text($(this.$rootElement).width() - parseInt($(this.$rangeLine).css('right'), 10));
 
     this._handleSliderClick = this._handleSliderClick.bind(this);
     this._handleStartPointMouseDown = this._handleStartPointMouseDown.bind(this);
@@ -47,16 +52,17 @@ class Slider {
   _handleStartPointMouseMove(event) {
     console.log('Тянем-потянем! левый');
     const sliderStartCoordinate = $(this.$rootElement).offset().left;
-    const newPosition = event.pageX - sliderStartCoordinate;
+    let newPosition = event.pageX - sliderStartCoordinate;
     const endPointCoordinate = $(this.$rootElement).width() - parseInt($(this.$rangeLine).css('right'), 10);
 
     if (newPosition <= 0) {
-      $(this.$rangeLine).css('left', '0px');
+      newPosition = 0;
     } else if (newPosition >= endPointCoordinate) {
-      $(this.$rangeLine).css('left', `${endPointCoordinate - 5}px`); // "- 5" - это временно, для наглядности
-    } else {
-      $(this.$rangeLine).css('left', `${newPosition}px`);
+      newPosition = endPointCoordinate - 5; // "- 5" - это временно, для наглядности
     }
+
+    $(this.$rangeLine).css('left', `${newPosition}px`);
+    this.$startValueElement.text(newPosition);
   }
 
   _handleStartPointMouseUp() {
@@ -72,16 +78,17 @@ class Slider {
   _handleEndPointMouseMove(event) {
     console.log('Тянем-потянем! правый');
     const sliderEndCoordinate = $(this.$rootElement).offset().left + $(this.$rootElement).width();
-    const newPosition = sliderEndCoordinate - event.pageX;
+    let newPosition = sliderEndCoordinate - event.pageX;
     const startPointCoordinate = $(this.$rootElement).width() - parseInt($(this.$rangeLine).css('left'), 10);
 
     if (newPosition <= 0) {
-      $(this.$rangeLine).css('right', '0px');
+      newPosition = 0;
     } else if (newPosition >= startPointCoordinate) {
-      $(this.$rangeLine).css('right', `${startPointCoordinate - 5}px`); // "- 5" - это временно, для наглядности
-    } else {
-      $(this.$rangeLine).css('right', `${newPosition}px`);
+      newPosition = startPointCoordinate - 5; // "- 5" - это временно, для наглядности
     }
+
+    $(this.$rangeLine).css('right', `${newPosition}px`);
+    this.$endValueElement.text($(this.$rootElement).width() - newPosition);
   }
 
   _handleEndPointMouseUp() {
