@@ -1,7 +1,11 @@
 .slider {
   position: relative;
   height: inherit;
+  &__values {
+    user-select: none;
+  }
   &__background-line {
+    position: relative;
     height: inherit;
     background: #ffffff;
     border: 0.1rem solid rgba(31, 32, 65, 0.25);
@@ -39,5 +43,6 @@
   &__value {
     position: absolute;
     top: -2rem;
+    user-select: none;
   }
 }

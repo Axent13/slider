@@ -1,14 +1,25 @@
+/* eslint-disable max-len */
 class Slider {
-  constructor($rootElement) {
+  constructor($rootElement, options) {
     this.$rootElement = $rootElement;
+    this.startValue = options.startValue;
+    this.endValue = options.endValue;
+    this.valuesRange = this.endValue - this.startValue;
+
+    this.$startValueElement = $(this.$rootElement).find('.js-slider__start-value');
+    this.$endValueElement = $(this.$rootElement).find('.js-slider__end-value');
+    this.$startValueElement.text(this.startValue);
+    this.$endValueElement.text(this.endValue);
+
     this.$rangeLine = $(this.$rootElement).find('.js-slider__range-line');
     this.$startPointElement = $(this.$rootElement).find('.js-slider__point_position_start');
     this.$endPointElement = $(this.$rootElement).find('.js-slider__point_position_end');
-    this.$startValueElement = $(this.$rootElement).find('.js-slider__value_position_start');
-    this.$endValueElement = $(this.$rootElement).find('.js-slider__value_position_end');
+    this.$startPointInfoElement = $(this.$rootElement).find('.js-slider__value_position_start');
+    this.$endPointInfoElement = $(this.$rootElement).find('.js-slider__value_position_end');
 
-    this.$startValueElement.text(parseInt($(this.$rangeLine).css('left'), 10));
-    this.$endValueElement.text($(this.$rootElement).width() - parseInt($(this.$rangeLine).css('right'), 10));
+    // this.$startPointInfoElement.text(parseInt($(this.$rangeLine).css('left'), 10));
+    // eslint-disable-next-line max-len
+    // this.$endPointInfoElement.text($(this.$rootElement).width() - parseInt($(this.$rangeLine).css('right'), 10));
 
     this._handleSliderClick = this._handleSliderClick.bind(this);
     this._handleStartPointMouseDown = this._handleStartPointMouseDown.bind(this);
@@ -19,6 +30,10 @@ class Slider {
     this._handleEndPointMouseUp = this._handleEndPointMouseUp.bind(this);
 
     this._initEventListeners();
+  }
+
+  _pixelsToValue(pixels) {
+    return Math.round((pixels * this.valuesRange) / $(this.$rootElement).width());
   }
 
   _handleSliderClick(event) {
@@ -35,11 +50,21 @@ class Slider {
       const newPosition = event.pageX - sliderStartCoordinate;
       if (newPosition >= 0) {
         $(this.$rangeLine).css('left', `${newPosition}px`);
+        this.$startPointInfoElement.text(newPosition);
+
+        const newValue = this._pixelsToValue(newPosition) + this.startValue;
+        this.$startPointInfoElement.text(newValue);
+        this.$startValueElement.text(newValue);
       }
     } else {
       const newPosition = sliderEndCoordinate - event.pageX;
       if (newPosition >= 0) {
         $(this.$rangeLine).css('right', `${newPosition}px`);
+        this.$endPointInfoElement.text($(this.$rootElement).width() - newPosition);
+
+        const newValue = this.endValue - this._pixelsToValue(newPosition);
+        this.$endPointInfoElement.text(newValue);
+        this.$endValueElement.text(newValue);
       }
     }
   }
@@ -62,7 +87,10 @@ class Slider {
     }
 
     $(this.$rangeLine).css('left', `${newPosition}px`);
-    this.$startValueElement.text(newPosition);
+
+    const newValue = this._pixelsToValue(newPosition) + this.startValue;
+    this.$startPointInfoElement.text(newValue);
+    this.$startValueElement.text(newValue);
   }
 
   _handleStartPointMouseUp() {
@@ -88,7 +116,10 @@ class Slider {
     }
 
     $(this.$rangeLine).css('right', `${newPosition}px`);
-    this.$endValueElement.text($(this.$rootElement).width() - newPosition);
+
+    const newValue = this.endValue - this._pixelsToValue(newPosition);
+    this.$endPointInfoElement.text(newValue);
+    this.$endValueElement.text(newValue);
   }
 
   _handleEndPointMouseUp() {

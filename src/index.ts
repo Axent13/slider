@@ -11,5 +11,5 @@ const $rootElement = $('.js-slider-page');
 const $sliderContainers = $rootElement.find('.js-slider-page__slider-container');
 
 $sliderContainers.each((index, node) => {
-  new Slider(node);
+  new Slider(node, {startValue: 100, endValue: 200});
 });
