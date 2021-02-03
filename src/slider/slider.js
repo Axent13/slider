@@ -1,25 +1,27 @@
 /* eslint-disable max-len */
-class Slider {
-  constructor($rootElement, options) {
-    this.$rootElement = $rootElement;
-    this.startValue = options.startValue;
-    this.endValue = options.endValue;
-    this.valuesRange = this.endValue - this.startValue;
+import Model from './model';
+import View from './view';
 
-    this.$startValueElement = $(this.$rootElement).find('.js-slider__start-value');
-    this.$endValueElement = $(this.$rootElement).find('.js-slider__end-value');
-    this.$startValueElement.text(this.startValue);
-    this.$endValueElement.text(this.endValue);
+class Slider {
+  constructor($rootElement) {
+    this.model = new Model({
+      minValue: 10,
+      maxValue: 200,
+    });
+
+    this.view = new View($rootElement);
+
+    // this.$rootElement = $rootElement;
+    // this.$startValueElement = $(this.$rootElement).find('.js-slider__start-value');
+    // this.$endValueElement = $(this.$rootElement).find('.js-slider__end-value');
+    // this.$startValueElement.text(this.model.getMinValue());
+    // this.$endValueElement.text(this.model.getMaxValue());
 
     this.$rangeLine = $(this.$rootElement).find('.js-slider__range-line');
     this.$startPointElement = $(this.$rootElement).find('.js-slider__point_position_start');
     this.$endPointElement = $(this.$rootElement).find('.js-slider__point_position_end');
     this.$startPointInfoElement = $(this.$rootElement).find('.js-slider__value_position_start');
     this.$endPointInfoElement = $(this.$rootElement).find('.js-slider__value_position_end');
-
-    // this.$startPointInfoElement.text(parseInt($(this.$rangeLine).css('left'), 10));
-    // eslint-disable-next-line max-len
-    // this.$endPointInfoElement.text($(this.$rootElement).width() - parseInt($(this.$rangeLine).css('right'), 10));
 
     this._handleSliderClick = this._handleSliderClick.bind(this);
     this._handleStartPointMouseDown = this._handleStartPointMouseDown.bind(this);
@@ -32,8 +34,9 @@ class Slider {
     this._initEventListeners();
   }
 
+  // мб это будет как раз в Фасаде?
   _pixelsToValue(pixels) {
-    return Math.round((pixels * this.valuesRange) / $(this.$rootElement).width());
+    return Math.round((pixels * this.model.getRange()) / $(this.$rootElement).width());
   }
 
   _handleSliderClick(event) {
@@ -49,10 +52,11 @@ class Slider {
     if (event.pageX <= rangeLineCenterCoordinate) {
       const newPosition = event.pageX - sliderStartCoordinate;
       if (newPosition >= 0) {
+        this.model.setStartSelectedValue(newPosition); // пока меняется, но нигде не используется...
         $(this.$rangeLine).css('left', `${newPosition}px`);
-        this.$startPointInfoElement.text(newPosition);
 
-        const newValue = this._pixelsToValue(newPosition) + this.startValue;
+        // это, похоже, тоже в фасаде
+        const newValue = this._pixelsToValue(newPosition) + this.model.getMinValue();
         this.$startPointInfoElement.text(newValue);
         this.$startValueElement.text(newValue);
       }
@@ -60,9 +64,8 @@ class Slider {
       const newPosition = sliderEndCoordinate - event.pageX;
       if (newPosition >= 0) {
         $(this.$rangeLine).css('right', `${newPosition}px`);
-        this.$endPointInfoElement.text($(this.$rootElement).width() - newPosition);
 
-        const newValue = this.endValue - this._pixelsToValue(newPosition);
+        const newValue = this.model.getMaxValue() - this._pixelsToValue(newPosition);
         this.$endPointInfoElement.text(newValue);
         this.$endValueElement.text(newValue);
       }
@@ -88,7 +91,7 @@ class Slider {
 
     $(this.$rangeLine).css('left', `${newPosition}px`);
 
-    const newValue = this._pixelsToValue(newPosition) + this.startValue;
+    const newValue = this._pixelsToValue(newPosition) + this.model.getMinValue();
     this.$startPointInfoElement.text(newValue);
     this.$startValueElement.text(newValue);
   }
@@ -117,7 +120,7 @@ class Slider {
 
     $(this.$rangeLine).css('right', `${newPosition}px`);
 
-    const newValue = this.endValue - this._pixelsToValue(newPosition);
+    const newValue = this.model.getMaxValue() - this._pixelsToValue(newPosition);
     this.$endPointInfoElement.text(newValue);
     this.$endValueElement.text(newValue);
   }
