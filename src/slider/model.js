@@ -5,8 +5,15 @@ class Model {
     this.range = this.maxValue - this.minValue;
     this.startSelectedValue = options.startSelectedValue || this.range / 4;
     this.endSelectedValue = options.endSelectedValue || this.range - this.range / 4;
+
+    this.receivedData = 'nothing...';
   }
 
+  getReceivedData() {
+    return this.receivedData;
+  }
+
+  // отрефакторить название
   getAllParameters() {
     return this;
   }

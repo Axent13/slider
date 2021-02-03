@@ -2,6 +2,11 @@ class View {
   constructor($rootElement) {
     this.$rootElement = $rootElement;
     this.createSliderElements();
+
+    this.observers = [];
+
+    this._handleTestClick = this._handleTestClick.bind(this);
+    this._initEventListeners();
   }
 
   createSliderElements() {
@@ -62,14 +67,34 @@ class View {
     );
 
     this.$pointEndElement.append(this.$valueEndElement);
-
     this.$rangeLineElement.append(this.$pointStartElement);
-
     this.$backgroundLineElement.append(this.$rangeLineElement);
-
     this.$sliderElement.append(this.$backgroundLineElement);
-
     this.$rootElement.append(this.$sliderElement);
+  }
+
+  subscribe(observer) {
+    this.observers.push(observer);
+  }
+
+  unsubscribe(observer) {
+    this.observers = this.observers.filter((currentObserver) => currentObserver !== observer);
+  }
+
+  emit(changes) {
+    this.observers.forEach((currentObserver) => {
+      currentObserver.update(changes);
+    });
+  }
+
+  _handleTestClick() {
+    console.log('click');
+    console.log(this);
+    this.emit({ type: 'click', data: 'data to model' });
+  }
+
+  _initEventListeners() {
+    $(this.$pointStartElement).on('click', this._handleTestClick);
   }
 }
 
