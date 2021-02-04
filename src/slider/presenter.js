@@ -1,6 +1,5 @@
 import Model from './model';
 import View from './view';
-import Observer from './observer';
 
 class Presenter {
   constructor($rootElement) {
@@ -9,9 +8,20 @@ class Presenter {
       maxValue: 200,
     });
     this.view = new View($rootElement);
-    this.observer = new Observer(this.model);
 
-    this.view.subscribe(this.observer);
+    this.view.subscribe(this);
+  }
+
+  update(action) {
+    switch (action.type) {
+      case 'click':
+        this.model.receivedData = action.data;
+        console.log(this.model.getReceivedData());
+        break;
+      default:
+        this.model.receivedData = 'no data received';
+        break;
+    }
   }
 }
 
