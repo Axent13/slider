@@ -5,8 +5,45 @@ class View {
 
     this.observers = [];
 
-    this._handleTestClick = this._handleTestClick.bind(this);
+    this._handleSliderClick = this._handleSliderClick.bind(this);
     this._initEventListeners();
+  }
+
+  _handleSliderClick(event) {
+    console.log('in handleSliderClick');
+    const sliderStartCoordinate = $(this.$rootElement).offset().left;
+    const sliderEndCoordinate = sliderStartCoordinate + $(this.$rootElement).width();
+
+    // Вычисляю координаты середины выделенной области слайдера,
+    // чтобы определить, ближе к какому из бегунков был совершен клик
+    const startPointCoordinate = parseInt($(this.$rangeLine).css('left'), 10) + sliderStartCoordinate;
+    const rangeLineWidth = $(this.$rangeLine).width();
+    const rangeLineCenterCoordinate = startPointCoordinate + rangeLineWidth / 2;
+
+    if (event.pageX <= rangeLineCenterCoordinate) {
+      const newPosition = event.pageX - sliderStartCoordinate;
+      if (newPosition >= 0) {
+        this.emit({ type: 'sliderClickedCloserToStartPoint', data: newPosition });
+
+        // this.model.setStartSelectedValue(newPosition);
+        // $(this.$rangeLine).css('left', `${newPosition}px`);
+
+        // // это, похоже, тоже в фасаде
+        // const newValue = this._pixelsToValue(newPosition) + this.model.getMinValue();
+        // this.$startPointInfoElement.text(newValue);
+        // this.$startValueElement.text(newValue);
+      }
+    } else {
+      const newPosition = sliderEndCoordinate - event.pageX;
+      if (newPosition >= 0) {
+        this.emit({ type: 'sliderClickedCloserToEndPoint', data: newPosition });
+        // $(this.$rangeLine).css('right', `${newPosition}px`);
+
+        // const newValue = this.model.getMaxValue() - this._pixelsToValue(newPosition);
+        // this.$endPointInfoElement.text(newValue);
+        // this.$endValueElement.text(newValue);
+      }
+    }
   }
 
   createSliderElements() {
@@ -89,14 +126,8 @@ class View {
     });
   }
 
-  _handleTestClick() {
-    console.log('click');
-    console.log(this);
-    this.emit({ type: 'click', data: 'data to model' });
-  }
-
   _initEventListeners() {
-    $(this.$startPointElement).on('click', this._handleTestClick);
+    $(this.$rootElement).on('click', this._handleSliderClick);
   }
 }
 

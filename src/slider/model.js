@@ -9,10 +9,6 @@ class Model {
     this.receivedData = 'nothing...';
   }
 
-  getReceivedData() {
-    return this.receivedData;
-  }
-
   // отрефакторить название
   getAllParameters() {
     return this;
