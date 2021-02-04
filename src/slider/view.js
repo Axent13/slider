@@ -36,38 +36,40 @@ class View {
     this.$rangeLineElement = document.createElement('div');
     this.$rangeLineElement.classList.add('slider__range-line', 'js-slider__range-line');
 
-    this.$pointStartElement = document.createElement('div');
-    this.$pointStartElement.classList.add(
+    this.$startPointElement = document.createElement('div');
+    this.$startPointElement.classList.add(
       'slider__point',
       'slider__point_position_start',
       'js-slider__point_position_start',
     );
 
-    this.$valueStartElement = document.createElement('div');
-    this.$valueStartElement.classList.add(
-      'slider__value',
-      'slider__value_position_start',
-      'js-slider__value_position_start',
+    this.$startTipElement = document.createElement('div');
+    this.$startTipElement.classList.add(
+      'slider__tip',
+      'slider__tip_position_start',
+      'js-slider__tip_position_start',
     );
 
-    this.$pointStartElement.append(this.$valueStartElement);
+    this.$startPointElement.append(this.$startTipElement);
 
-    this.$pointEndElement = document.createElement('div');
-    this.$pointEndElement.classList.add(
+    this.$endPointElement = document.createElement('div');
+    this.$endPointElement.classList.add(
       'slider__point',
       'slider__point_position_end',
       'js-slider__point_position_end',
     );
 
-    this.$valueEndElement = document.createElement('div');
-    this.$valueEndElement.classList.add(
-      'slider__value',
-      'slider__value_position_end',
-      'js-slider__value_position_end',
+    this.$endTipElement = document.createElement('div');
+    this.$endTipElement.classList.add(
+      'slider__tip',
+      'slider__tip_position_end',
+      'js-slider__tip_position_end',
     );
 
-    this.$pointEndElement.append(this.$valueEndElement);
-    this.$rangeLineElement.append(this.$pointStartElement);
+    this.$endPointElement.append(this.$endTipElement);
+
+    this.$rangeLineElement.append(this.$startPointElement);
+    this.$rangeLineElement.append(this.$endPointElement);
     this.$backgroundLineElement.append(this.$rangeLineElement);
     this.$sliderElement.append(this.$backgroundLineElement);
     this.$rootElement.append(this.$sliderElement);
@@ -94,7 +96,7 @@ class View {
   }
 
   _initEventListeners() {
-    $(this.$pointStartElement).on('click', this._handleTestClick);
+    $(this.$startPointElement).on('click', this._handleTestClick);
   }
 }
 
