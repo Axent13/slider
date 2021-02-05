@@ -3,30 +3,36 @@ class View {
     this.$rootElement = $rootElement;
     this.createSliderElements();
 
-    this.observers = [];
-
     this._handleSliderClick = this._handleSliderClick.bind(this);
     this._initEventListeners();
+
+    this.observers = [];
+  }
+
+  setStartPointPosition(coordinate) {
+    $(this.$rangeLineElement).css('left', `${coordinate}px`);
+  }
+
+  setEndPointPosition(coordinate) {
+    $(this.$rangeLineElement).css('right', `${coordinate}px`);
   }
 
   _handleSliderClick(event) {
-    console.log('in handleSliderClick');
-    const sliderStartCoordinate = $(this.$rootElement).offset().left;
+    const sliderStartCoordinate = $(this.$backgroundLineElement).offset().left;
     const sliderEndCoordinate = sliderStartCoordinate + $(this.$rootElement).width();
 
     // Вычисляю координаты середины выделенной области слайдера,
     // чтобы определить, ближе к какому из бегунков был совершен клик
-    const startPointCoordinate = parseInt($(this.$rangeLine).css('left'), 10) + sliderStartCoordinate;
-    const rangeLineWidth = $(this.$rangeLine).width();
+    const startPointCoordinate = parseInt($(this.$rangeLineElement).css('left'), 10) + sliderStartCoordinate;
+    const rangeLineWidth = $(this.$rangeLineElement).width();
     const rangeLineCenterCoordinate = startPointCoordinate + rangeLineWidth / 2;
-
     if (event.pageX <= rangeLineCenterCoordinate) {
       const newPosition = event.pageX - sliderStartCoordinate;
       if (newPosition >= 0) {
         this.emit({ type: 'sliderClickedCloserToStartPoint', data: newPosition });
 
         // this.model.setStartSelectedValue(newPosition);
-        // $(this.$rangeLine).css('left', `${newPosition}px`);
+        // $(this.$rangeLineElement).css('left', `${newPosition}px`);
 
         // // это, похоже, тоже в фасаде
         // const newValue = this._pixelsToValue(newPosition) + this.model.getMinValue();
@@ -37,7 +43,7 @@ class View {
       const newPosition = sliderEndCoordinate - event.pageX;
       if (newPosition >= 0) {
         this.emit({ type: 'sliderClickedCloserToEndPoint', data: newPosition });
-        // $(this.$rangeLine).css('right', `${newPosition}px`);
+        // $(this.$rangeLineElement).css('right', `${newPosition}px`);
 
         // const newValue = this.model.getMaxValue() - this._pixelsToValue(newPosition);
         // this.$endPointInfoElement.text(newValue);
@@ -120,9 +126,9 @@ class View {
     this.observers = this.observers.filter((currentObserver) => currentObserver !== observer);
   }
 
-  emit(changes) {
+  emit({ type, data }) {
     this.observers.forEach((currentObserver) => {
-      currentObserver.update(changes);
+      currentObserver.update({ type, data });
     });
   }
 

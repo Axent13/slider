@@ -34,43 +34,43 @@ class Slider {
     this._initEventListeners();
   }
 
-  // мб это будет как раз в Фасаде?
-  _pixelsToValue(pixels) {
-    return Math.round((pixels * this.model.getRange()) / $(this.$rootElement).width());
-  }
+  // // мб это будет как раз в Фасаде?
+  // _pixelsToValue(pixels) {
+  //   return Math.round((pixels * this.model.getRange()) / $(this.$rootElement).width());
+  // }
 
-  _handleSliderClick(event) {
-    const sliderStartCoordinate = $(this.$rootElement).offset().left;
-    const sliderEndCoordinate = sliderStartCoordinate + $(this.$rootElement).width();
+  // _handleSliderClick(event) {
+  //   const sliderStartCoordinate = $(this.$rootElement).offset().left;
+  //   const sliderEndCoordinate = sliderStartCoordinate + $(this.$rootElement).width();
 
-    // Вычисляю координаты середины выделенной области слайдера,
-    // чтобы определить, ближе к какому из бегунков был совершен клик
-    const startPointCoordinate = parseInt($(this.$rangeLine).css('left'), 10) + sliderStartCoordinate;
-    const rangeLineWidth = $(this.$rangeLine).width();
-    const rangeLineCenterCoordinate = startPointCoordinate + rangeLineWidth / 2;
+  //   // Вычисляю координаты середины выделенной области слайдера,
+  //   // чтобы определить, ближе к какому из бегунков был совершен клик
+  //   const startPointCoordinate = parseInt($(this.$rangeLine).css('left'), 10) + sliderStartCoordinate;
+  //   const rangeLineWidth = $(this.$rangeLine).width();
+  //   const rangeLineCenterCoordinate = startPointCoordinate + rangeLineWidth / 2;
 
-    if (event.pageX <= rangeLineCenterCoordinate) {
-      const newPosition = event.pageX - sliderStartCoordinate;
-      if (newPosition >= 0) {
-        this.model.setStartSelectedValue(newPosition); // пока меняется, но нигде не используется...
-        $(this.$rangeLine).css('left', `${newPosition}px`);
+  //   if (event.pageX <= rangeLineCenterCoordinate) {
+  //     const newPosition = event.pageX - sliderStartCoordinate;
+  //     if (newPosition >= 0) {
+  //       this.model.setStartSelectedValue(newPosition); // пока меняется, но нигде не используется...
+  //       $(this.$rangeLine).css('left', `${newPosition}px`);
 
-        // это, похоже, тоже в фасаде
-        const newValue = this._pixelsToValue(newPosition) + this.model.getMinValue();
-        this.$startPointInfoElement.text(newValue);
-        this.$startValueElement.text(newValue);
-      }
-    } else {
-      const newPosition = sliderEndCoordinate - event.pageX;
-      if (newPosition >= 0) {
-        $(this.$rangeLine).css('right', `${newPosition}px`);
+  //       // это, похоже, тоже в фасаде
+  //       const newValue = this._pixelsToValue(newPosition) + this.model.getMinValue();
+  //       this.$startPointInfoElement.text(newValue);
+  //       this.$startValueElement.text(newValue);
+  //     }
+  //   } else {
+  //     const newPosition = sliderEndCoordinate - event.pageX;
+  //     if (newPosition >= 0) {
+  //       $(this.$rangeLine).css('right', `${newPosition}px`);
 
-        const newValue = this.model.getMaxValue() - this._pixelsToValue(newPosition);
-        this.$endPointInfoElement.text(newValue);
-        this.$endValueElement.text(newValue);
-      }
-    }
-  }
+  //       const newValue = this.model.getMaxValue() - this._pixelsToValue(newPosition);
+  //       this.$endPointInfoElement.text(newValue);
+  //       this.$endValueElement.text(newValue);
+  //     }
+  //   }
+  // }
 
   _handleStartPointMouseDown() {
     $(document).on('mousemove', this._handleStartPointMouseMove);

@@ -6,7 +6,7 @@ class Model {
     this.startSelectedValue = options.startSelectedValue || this.range / 4;
     this.endSelectedValue = options.endSelectedValue || this.range - this.range / 4;
 
-    this.receivedData = 'nothing...';
+    this.observers = [];
   }
 
   // отрефакторить название
@@ -46,6 +46,26 @@ class Model {
 
   setStartSelectedValue(newValue) {
     this.startSelectedValue = newValue;
+    this.emit({ type: 'modelUpdatedStartSelectedValue', data: this.startSelectedValue });
+  }
+
+  setEndSelectedValue(newValue) {
+    this.endSelectedValue = newValue;
+    this.emit({ type: 'modelUpdatedEndSelectedValue', data: this.endSelectedValue });
+  }
+
+  subscribe(observer) {
+    this.observers.push(observer);
+  }
+
+  unsubscribe(observer) {
+    this.observers = this.observers.filter((currentObserver) => currentObserver !== observer);
+  }
+
+  emit({ type, data }) {
+    this.observers.forEach((currentObserver) => {
+      currentObserver.update({ type, data });
+    });
   }
 }
 

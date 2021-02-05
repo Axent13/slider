@@ -5,11 +5,12 @@ class Presenter {
   constructor($rootElement) {
     this.$rootElement = $rootElement;
     this.model = new Model({
-      minValue: 10,
-      maxValue: 200,
+      minValue: 0,
+      maxValue: 100,
     });
     this.view = new View($rootElement);
 
+    this.model.subscribe(this);
     this.view.subscribe(this);
   }
 
@@ -17,16 +18,30 @@ class Presenter {
     return Math.round((pixels * this.model.getRange()) / $(this.$rootElement).width());
   }
 
+  _valueToPixels(value) {
+    return Math.round(($(this.$rootElement).width() * value) / this.model.getRange());
+  }
+
   update(action) {
     switch (action.type) {
       case 'sliderClickedCloserToStartPoint': {
-        const newStartValue = this._pixelsToValue(action.data);
-        console.log(`Clicked closer to start: ${newStartValue}`);
+        const newValue = this._pixelsToValue(action.data);
+        this.model.setStartSelectedValue(newValue);
         break;
       }
       case 'sliderClickedCloserToEndPoint': {
-        const newStartValue = this._pixelsToValue(action.data);
-        console.log(`Clicked closer to end: ${newStartValue}`);
+        const newValue = this._pixelsToValue(action.data);
+        this.model.setEndSelectedValue(newValue);
+        break;
+      }
+      case 'modelUpdatedStartSelectedValue': {
+        const newValue = this._valueToPixels(action.data);
+        this.view.setStartPointPosition(newValue);
+        break;
+      }
+      case 'modelUpdatedEndSelectedValue': {
+        const newValue = this._valueToPixels(action.data);
+        this.view.setEndPointPosition(newValue);
         break;
       }
       default:
