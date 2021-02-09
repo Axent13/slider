@@ -13,10 +13,10 @@ class Presenter {
     this.model.subscribe(this);
     this.view.subscribe(this);
 
-    this.setInitaialValues();
+    this.setInitialViewValues();
   }
 
-  setInitaialValues() {
+  setInitialViewValues() {
     const startValue = this.model.getStartSelectedValue();
     const endValue = this.model.getEndSelectedValue();
     this.view.setStartPointPosition(this._valueToPixels(startValue));
@@ -57,6 +57,16 @@ class Presenter {
         const newValue = this._valueToPixels(action.data);
         this.view.setEndPointPosition(newValue);
         this.view.setEndTipValue(this.model.getMaxValue() - action.data);
+        break;
+      }
+      case 'startPointMoved': {
+        const newValue = this._pixelsToValue(action.data);
+        this.model.setStartSelectedValue(newValue);
+        break;
+      }
+      case 'endPointMoved': {
+        const newValue = this._pixelsToValue(action.data);
+        this.model.setEndSelectedValue(newValue);
         break;
       }
       default:

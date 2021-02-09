@@ -4,6 +4,12 @@ class View {
     this.createSliderElements();
 
     this._handleSliderClick = this._handleSliderClick.bind(this);
+    this._handleStartPointMouseDown = this._handleStartPointMouseDown.bind(this);
+    this._handleStartPointMouseMove = this._handleStartPointMouseMove.bind(this);
+    this._handleStartPointMouseUp = this._handleStartPointMouseUp.bind(this);
+    this._handleEndPointMouseDown = this._handleEndPointMouseDown.bind(this);
+    this._handleEndPointMouseMove = this._handleEndPointMouseMove.bind(this);
+    this._handleEndPointMouseUp = this._handleEndPointMouseUp.bind(this);
     this._initEventListeners();
 
     this.observers = [];
@@ -46,26 +52,68 @@ class View {
       const newPosition = event.pageX - sliderStartCoordinate;
       if (newPosition >= 0) {
         this.emit({ type: 'sliderClickedCloserToStartPoint', data: newPosition });
-
-        // this.model.setStartSelectedValue(newPosition);
-        // $(this.$rangeLineElement).css('left', `${newPosition}px`);
-
-        // // это, похоже, тоже в фасаде
-        // const newValue = this._pixelsToValue(newPosition) + this.model.getMinValue();
-        // this.$startPointInfoElement.text(newValue);
-        // this.$startValueElement.text(newValue);
       }
     } else {
       const newPosition = sliderEndCoordinate - event.pageX;
       if (newPosition >= 0) {
         this.emit({ type: 'sliderClickedCloserToEndPoint', data: newPosition });
-        // $(this.$rangeLineElement).css('right', `${newPosition}px`);
-
-        // const newValue = this.model.getMaxValue() - this._pixelsToValue(newPosition);
-        // this.$endPointInfoElement.text(newValue);
-        // this.$endLimitValueElement.text(newValue);
       }
     }
+  }
+
+  _handleStartPointMouseDown() {
+    $(document).on('mousemove', this._handleStartPointMouseMove);
+    $(document).on('mouseup', this._handleStartPointMouseUp);
+  }
+
+  _handleStartPointMouseMove(event) {
+    console.log('Тянем-потянем! левый');
+    const sliderStartCoordinate = $(this.$rootElement).offset().left;
+    let newPosition = event.pageX - sliderStartCoordinate;
+    const endPointCoordinate = $(this.$rootElement).width() - parseInt($(this.$rangeLine).css('right'), 10);
+
+    if (newPosition <= 0) {
+      newPosition = 0;
+    } else if (newPosition >= endPointCoordinate) {
+      newPosition = endPointCoordinate - 5; // "- 5" - это временно, для наглядности
+    }
+
+    this.emit({ type: 'startPointMoved', data: newPosition });
+  }
+
+  _handleStartPointMouseUp() {
+    $(document).off('mousemove', this._handleStartPointMouseMove);
+    $(document).off('mouseup', this._handleStartPointMouseUp);
+  }
+
+  _handleEndPointMouseDown() {
+    $(document).on('mousemove', this._handleEndPointMouseMove);
+    $(document).on('mouseup', this._handleEndPointMouseUp);
+  }
+
+  _handleEndPointMouseMove(event) {
+    console.log('Тянем-потянем! правый');
+    const sliderEndCoordinate = $(this.$rootElement).offset().left + $(this.$rootElement).width();
+    let newPosition = sliderEndCoordinate - event.pageX;
+    const startPointCoordinate = $(this.$rootElement).width() - parseInt($(this.$rangeLine).css('left'), 10);
+
+    if (newPosition <= 0) {
+      newPosition = 0;
+    } else if (newPosition >= startPointCoordinate) {
+      newPosition = startPointCoordinate - 5; // "- 5" - это временно, для наглядности
+    }
+    this.emit({ type: 'endPointMoved', data: newPosition });
+
+    // $(this.$rangeLine).css('right', `${newPosition}px`);
+
+    // const newValue = this.model.getMaxValue() - this._pixelsToValue(newPosition);
+    // this.$endPointInfoElement.text(newValue);
+    // this.$endValueElement.text(newValue);
+  }
+
+  _handleEndPointMouseUp() {
+    $(document).off('mousemove', this._handleEndPointMouseMove);
+    $(document).off('mouseup', this._handleEndPointMouseUp);
   }
 
   createSliderElements() {
@@ -150,6 +198,8 @@ class View {
 
   _initEventListeners() {
     $(this.$rootElement).on('click', this._handleSliderClick);
+    $(this.$startPointElement).on('mousedown', this._handleStartPointMouseDown);
+    $(this.$endPointElement).on('mousedown', this._handleEndPointMouseDown);
   }
 }
 

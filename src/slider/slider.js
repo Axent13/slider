@@ -72,63 +72,63 @@ class Slider {
   //   }
   // }
 
-  _handleStartPointMouseDown() {
-    $(document).on('mousemove', this._handleStartPointMouseMove);
-    $(document).on('mouseup', this._handleStartPointMouseUp);
-  }
+  // _handleStartPointMouseDown() {
+  //   $(document).on('mousemove', this._handleStartPointMouseMove);
+  //   $(document).on('mouseup', this._handleStartPointMouseUp);
+  // }
 
-  _handleStartPointMouseMove(event) {
-    console.log('Тянем-потянем! левый');
-    const sliderStartCoordinate = $(this.$rootElement).offset().left;
-    let newPosition = event.pageX - sliderStartCoordinate;
-    const endPointCoordinate = $(this.$rootElement).width() - parseInt($(this.$rangeLine).css('right'), 10);
+  // _handleStartPointMouseMove(event) {
+  //   console.log('Тянем-потянем! левый');
+  //   const sliderStartCoordinate = $(this.$rootElement).offset().left;
+  //   let newPosition = event.pageX - sliderStartCoordinate;
+  //   const endPointCoordinate = $(this.$rootElement).width() - parseInt($(this.$rangeLine).css('right'), 10);
 
-    if (newPosition <= 0) {
-      newPosition = 0;
-    } else if (newPosition >= endPointCoordinate) {
-      newPosition = endPointCoordinate - 5; // "- 5" - это временно, для наглядности
-    }
+  //   if (newPosition <= 0) {
+  //     newPosition = 0;
+  //   } else if (newPosition >= endPointCoordinate) {
+  //     newPosition = endPointCoordinate - 5; // "- 5" - это временно, для наглядности
+  //   }
 
-    $(this.$rangeLine).css('left', `${newPosition}px`);
+  //   $(this.$rangeLine).css('left', `${newPosition}px`);
 
-    const newValue = this._pixelsToValue(newPosition) + this.model.getMinValue();
-    this.$startPointInfoElement.text(newValue);
-    this.$startValueElement.text(newValue);
-  }
+  //   const newValue = this._pixelsToValue(newPosition) + this.model.getMinValue();
+  //   this.$startPointInfoElement.text(newValue);
+  //   this.$startValueElement.text(newValue);
+  // }
 
-  _handleStartPointMouseUp() {
-    $(document).off('mousemove', this._handleStartPointMouseMove);
-    $(document).off('mouseup', this._handleStartPointMouseUp);
-  }
+  // _handleStartPointMouseUp() {
+  //   $(document).off('mousemove', this._handleStartPointMouseMove);
+  //   $(document).off('mouseup', this._handleStartPointMouseUp);
+  // }
 
-  _handleEndPointMouseDown() {
-    $(document).on('mousemove', this._handleEndPointMouseMove);
-    $(document).on('mouseup', this._handleEndPointMouseUp);
-  }
+  // _handleEndPointMouseDown() {
+  //   $(document).on('mousemove', this._handleEndPointMouseMove);
+  //   $(document).on('mouseup', this._handleEndPointMouseUp);
+  // }
 
-  _handleEndPointMouseMove(event) {
-    console.log('Тянем-потянем! правый');
-    const sliderEndCoordinate = $(this.$rootElement).offset().left + $(this.$rootElement).width();
-    let newPosition = sliderEndCoordinate - event.pageX;
-    const startPointCoordinate = $(this.$rootElement).width() - parseInt($(this.$rangeLine).css('left'), 10);
+  // _handleEndPointMouseMove(event) {
+  //   console.log('Тянем-потянем! правый');
+  //   const sliderEndCoordinate = $(this.$rootElement).offset().left + $(this.$rootElement).width();
+  //   let newPosition = sliderEndCoordinate - event.pageX;
+  //   const startPointCoordinate = $(this.$rootElement).width() - parseInt($(this.$rangeLine).css('left'), 10);
 
-    if (newPosition <= 0) {
-      newPosition = 0;
-    } else if (newPosition >= startPointCoordinate) {
-      newPosition = startPointCoordinate - 5; // "- 5" - это временно, для наглядности
-    }
+  //   if (newPosition <= 0) {
+  //     newPosition = 0;
+  //   } else if (newPosition >= startPointCoordinate) {
+  //     newPosition = startPointCoordinate - 5; // "- 5" - это временно, для наглядности
+  //   }
 
-    $(this.$rangeLine).css('right', `${newPosition}px`);
+  //   $(this.$rangeLine).css('right', `${newPosition}px`);
 
-    const newValue = this.model.getMaxValue() - this._pixelsToValue(newPosition);
-    this.$endPointInfoElement.text(newValue);
-    this.$endValueElement.text(newValue);
-  }
+  //   const newValue = this.model.getMaxValue() - this._pixelsToValue(newPosition);
+  //   this.$endPointInfoElement.text(newValue);
+  //   this.$endValueElement.text(newValue);
+  // }
 
-  _handleEndPointMouseUp() {
-    $(document).off('mousemove', this._handleEndPointMouseMove);
-    $(document).off('mouseup', this._handleEndPointMouseUp);
-  }
+  // _handleEndPointMouseUp() {
+  //   $(document).off('mousemove', this._handleEndPointMouseMove);
+  //   $(document).off('mouseup', this._handleEndPointMouseUp);
+  // }
 
   _initEventListeners() {
     $(this.$rootElement).on('mousedown', this._handleSliderClick);
