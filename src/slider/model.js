@@ -30,6 +30,10 @@ class Model {
     return this.startSelectedValue;
   }
 
+  getEndSelectedValue() {
+    return this.endSelectedValue;
+  }
+
   setRange(newMinValue, newMaxValue) {
     this.range = newMaxValue - newMinValue;
   }

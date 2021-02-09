@@ -13,8 +13,24 @@ class View {
     $(this.$rangeLineElement).css('left', `${coordinate}px`);
   }
 
+  setStartTipValue(value) {
+    $(this.$startTipElement).text(value);
+  }
+
+  setStartLimitValue(value) {
+    $(this.$startLimitValueElement).text(value);
+  }
+
   setEndPointPosition(coordinate) {
     $(this.$rangeLineElement).css('right', `${coordinate}px`);
+  }
+
+  setEndTipValue(value) {
+    $(this.$endTipElement).text(value);
+  }
+
+  setEndLimitValue(value) {
+    $(this.$endLimitValueElement).text(value);
   }
 
   _handleSliderClick(event) {
@@ -47,7 +63,7 @@ class View {
 
         // const newValue = this.model.getMaxValue() - this._pixelsToValue(newPosition);
         // this.$endPointInfoElement.text(newValue);
-        // this.$endValueElement.text(newValue);
+        // this.$endLimitValueElement.text(newValue);
       }
     }
   }
@@ -59,17 +75,17 @@ class View {
     this.$sliderValuesElement = document.createElement('div');
     this.$sliderValuesElement.classList.add('slider__values');
 
-    this.$startValueElement = document.createElement('span');
-    this.$startValueElement.classList.add('slider__start-value', 'js-slider__start-value');
-    this.$sliderValuesElement.append(this.$startValueElement);
+    this.$startLimitValueElement = document.createElement('span');
+    this.$startLimitValueElement.classList.add('slider__start-limit-value', 'js-slider__start-limit-value');
+    this.$sliderValuesElement.append(this.$startLimitValueElement);
 
     this.$delimiterElement = document.createElement('span');
     this.$delimiterElement.classList.add('slider__delimiter');
     this.$sliderValuesElement.append(this.$delimiterElement);
 
-    this.$endValueElement = document.createElement('span');
-    this.$endValueElement.classList.add('slider__end-value', 'js-slider__end-value');
-    this.$sliderValuesElement.append(this.$endValueElement);
+    this.$endLimitValueElement = document.createElement('span');
+    this.$endLimitValueElement.classList.add('slider__end-limit-value', 'js-slider__end-limit-value');
+    this.$sliderValuesElement.append(this.$endLimitValueElement);
 
     this.$sliderElement.append(this.$sliderValuesElement);
 

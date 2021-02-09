@@ -3,6 +3,8 @@
   height: inherit;
   &__values {
     user-select: none;
+    display: flex;
+    justify-content: space-between;
   }
   &__background-line {
     position: relative;
