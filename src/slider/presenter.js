@@ -22,7 +22,7 @@ class Presenter {
     this.view.setStartPointPosition(this._valueToPixels(startValue));
     this.view.setStartTipValue(startValue);
     this.view.setStartLimitValue(this.model.getMinValue());
-    this.view.setEndPointPosition(this._valueToPixels(endValue));
+    this.view.setEndPointPosition(this._valueToPixels(this.model.getMaxValue() - endValue));
     this.view.setEndTipValue(endValue);
     this.view.setEndLimitValue(this.model.getMaxValue());
   }
