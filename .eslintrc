@@ -1,6 +1,6 @@
 {
   "extends": "airbnb-base",
-  "plugins": ["fsd"],
+  "plugins": ["fsd", "jest"],
   "parser": "babel-eslint",
   "rules": {
     "fsd/hof-name-prefix": "error",

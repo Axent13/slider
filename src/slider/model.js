@@ -9,11 +9,6 @@ class Model {
     this.observers = [];
   }
 
-  // отрефакторить название
-  getAllParameters() {
-    return this;
-  }
-
   getMinValue() {
     return this.minValue;
   }
@@ -34,10 +29,6 @@ class Model {
     return this.endSelectedValue;
   }
 
-  setRange(newMinValue, newMaxValue) {
-    this.range = newMaxValue - newMinValue;
-  }
-
   setMinValue(newValue) {
     this.minValue = newValue;
     this.setRange(this.minValue, this.maxValue);
@@ -46,6 +37,10 @@ class Model {
   setMaxValue(newValue) {
     this.maxValue = newValue;
     this.setRange(this.minValue, this.maxValue);
+  }
+
+  setRange(newMinValue, newMaxValue) {
+    this.range = newMaxValue - newMinValue;
   }
 
   setStartSelectedValue(newValue) {
