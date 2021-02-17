@@ -44,6 +44,7 @@ class View extends Observer {
   }
 
   _handleSliderClick(event) {
+    console.log('Slider clicked!');
     const sliderStartCoordinate = $(this.$backgroundLineElement).offset().left;
     const sliderEndCoordinate = sliderStartCoordinate + $(this.$rootElement).width();
 
@@ -71,16 +72,14 @@ class View extends Observer {
   }
 
   _handleStartPointMouseMove(event) {
-    console.log('Тянем-потянем! левый');
     const sliderStartCoordinate = $(this.$rootElement).offset().left;
     let newPosition = event.pageX - sliderStartCoordinate;
     const endPointCoordinate = $(this.$rootElement).width() - parseInt($(this.$rangeLineElement).css('right'), 10);
-    console.log($(this.$rootElement).width());
-    console.log(`newPosition: ${newPosition} endPointCoordinate: ${endPointCoordinate}`);
+
     if (newPosition <= 0) {
       newPosition = 0;
     } else if (newPosition >= endPointCoordinate) {
-      newPosition = endPointCoordinate; // "- 5" - это временно, для наглядности
+      newPosition = endPointCoordinate;
     }
 
     this.emit({ type: 'startPointMoved', data: newPosition });
@@ -97,7 +96,6 @@ class View extends Observer {
   }
 
   _handleEndPointMouseMove(event) {
-    console.log('Тянем-потянем! правый');
     const sliderEndCoordinate = $(this.$rootElement).offset().left + $(this.$rootElement).width();
     let newPosition = sliderEndCoordinate - event.pageX;
     const startPointCoordinate = $(this.$rootElement).width() - parseInt($(this.$rangeLineElement).css('left'), 10);
@@ -105,15 +103,9 @@ class View extends Observer {
     if (newPosition <= 0) {
       newPosition = 0;
     } else if (newPosition >= startPointCoordinate) {
-      newPosition = startPointCoordinate; // "- 5" - это временно, для наглядности
+      newPosition = startPointCoordinate;
     }
     this.emit({ type: 'endPointMoved', data: newPosition });
-
-    // $(this.$rangeLineElement).css('right', `${newPosition}px`);
-
-    // const newValue = this.model.getMaxValue() - this._pixelsToValue(newPosition);
-    // this.$endPointInfoElement.text(newValue);
-    // this.$endValueElement.text(newValue);
   }
 
   _handleEndPointMouseUp() {
@@ -188,7 +180,7 @@ class View extends Observer {
   }
 
   _initEventListeners() {
-    $(this.$rootElement).on('click', this._handleSliderClick);
+    $(this.$rootElement).on('mousedown', this._handleSliderClick);
     $(this.$startPointElement).on('mousedown', this._handleStartPointMouseDown);
     $(this.$endPointElement).on('mousedown', this._handleEndPointMouseDown);
   }
