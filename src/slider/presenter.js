@@ -2,11 +2,13 @@ import Model from './model';
 import View from './view';
 
 class Presenter {
-  constructor($rootElement) {
+  constructor($rootElement, options) {
     this.$rootElement = $rootElement;
+    this.step = 1 / options.step;
+
     this.model = new Model({
-      minValue: 0,
-      maxValue: 100,
+      minValue: options.minValue,
+      maxValue: options.maxValue,
     });
     this.view = new View($rootElement);
 
@@ -28,7 +30,8 @@ class Presenter {
   }
 
   _pixelsToValue(pixels) {
-    return Math.round((pixels * this.model.getRange()) / $(this.$rootElement).width());
+    // eslint-disable-next-line max-len
+    return Math.round(((pixels * this.model.getRange()) / $(this.$rootElement).width()) * this.step) / this.step;
   }
 
   _valueToPixels(value) {
