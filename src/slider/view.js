@@ -1,5 +1,9 @@
-class View {
+import Observer from './observer';
+
+class View extends Observer {
   constructor($rootElement) {
+    super();
+
     this.$rootElement = $rootElement;
     this.createSliderElements();
 
@@ -70,12 +74,13 @@ class View {
     console.log('Тянем-потянем! левый');
     const sliderStartCoordinate = $(this.$rootElement).offset().left;
     let newPosition = event.pageX - sliderStartCoordinate;
-    const endPointCoordinate = $(this.$rootElement).width() - parseInt($(this.$rangeLine).css('right'), 10);
-
+    const endPointCoordinate = $(this.$rootElement).width() - parseInt($(this.$rangeLineElement).css('right'), 10);
+    console.log($(this.$rootElement).width());
+    console.log(`newPosition: ${newPosition} endPointCoordinate: ${endPointCoordinate}`);
     if (newPosition <= 0) {
       newPosition = 0;
     } else if (newPosition >= endPointCoordinate) {
-      newPosition = endPointCoordinate - 5; // "- 5" - это временно, для наглядности
+      newPosition = endPointCoordinate; // "- 5" - это временно, для наглядности
     }
 
     this.emit({ type: 'startPointMoved', data: newPosition });
@@ -95,16 +100,16 @@ class View {
     console.log('Тянем-потянем! правый');
     const sliderEndCoordinate = $(this.$rootElement).offset().left + $(this.$rootElement).width();
     let newPosition = sliderEndCoordinate - event.pageX;
-    const startPointCoordinate = $(this.$rootElement).width() - parseInt($(this.$rangeLine).css('left'), 10);
+    const startPointCoordinate = $(this.$rootElement).width() - parseInt($(this.$rangeLineElement).css('left'), 10);
 
     if (newPosition <= 0) {
       newPosition = 0;
     } else if (newPosition >= startPointCoordinate) {
-      newPosition = startPointCoordinate - 5; // "- 5" - это временно, для наглядности
+      newPosition = startPointCoordinate; // "- 5" - это временно, для наглядности
     }
     this.emit({ type: 'endPointMoved', data: newPosition });
 
-    // $(this.$rangeLine).css('right', `${newPosition}px`);
+    // $(this.$rangeLineElement).css('right', `${newPosition}px`);
 
     // const newValue = this.model.getMaxValue() - this._pixelsToValue(newPosition);
     // this.$endPointInfoElement.text(newValue);
@@ -180,20 +185,6 @@ class View {
     this.$backgroundLineElement.append(this.$rangeLineElement);
     this.$sliderElement.append(this.$backgroundLineElement);
     this.$rootElement.append(this.$sliderElement);
-  }
-
-  subscribe(observer) {
-    this.observers.push(observer);
-  }
-
-  unsubscribe(observer) {
-    this.observers = this.observers.filter((currentObserver) => currentObserver !== observer);
-  }
-
-  emit({ type, data }) {
-    this.observers.forEach((currentObserver) => {
-      currentObserver.update({ type, data });
-    });
   }
 
   _initEventListeners() {

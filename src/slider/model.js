@@ -1,5 +1,9 @@
-class Model {
+import Observer from './observer';
+
+class Model extends Observer {
   constructor(options = {}) {
+    super();
+
     this.minValue = options.minValue || 0;
     this.maxValue = options.maxValue || 100;
     this.range = this.maxValue - this.minValue;
