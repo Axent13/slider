@@ -1,5 +1,6 @@
-import Model from './model';
-import View from './view';
+import '../slider.scss';
+import Model from '../Model/model';
+import View from '../View/view';
 
 class Presenter {
   constructor($rootElement, options) {

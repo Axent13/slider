@@ -1,4 +1,4 @@
-import Observer from './observer';
+import Observer from '../Observer/observer';
 
 class View extends Observer {
   constructor($rootElement) {
