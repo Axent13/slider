@@ -1,6 +1,6 @@
 import Model from '../model';
 
-describe('Model returns current specified values', () => {
+describe('Creating Model with specified values', () => {
   const model = new Model({
     minValue: 10,
     maxValue: 90,
@@ -10,7 +10,6 @@ describe('Model returns current specified values', () => {
   test('checking minValue', () => {
     expect(model.getMinValue()).toBe(10);
   });
-
   test('checking maxValue', () => {
     expect(model.getMaxValue()).toBe(90);
   });
@@ -23,10 +22,20 @@ describe('Model returns current specified values', () => {
   test('checking endSelectedValue', () => {
     expect(model.getEndSelectedValue()).toBe(50);
   });
+  test('chechking whole Model object', () => {
+    expect(model).toEqual({
+      minValue: 10,
+      maxValue: 90,
+      range: 80,
+      startSelectedValue: 25,
+      endSelectedValue: 50,
+      observers: [],
+    });
+  });
 });
 
-describe('Model returns current default values', () => {
-  const model = new Model({});
+describe('Creating Model with default values', () => {
+  const model = new Model();
   test('checking minValue', () => {
     expect(model.getMinValue()).toBe(0);
   });
@@ -41,6 +50,16 @@ describe('Model returns current default values', () => {
   });
   test('checking endSelectedValue', () => {
     expect(model.getEndSelectedValue()).toBe(75);
+  });
+  test('chechking whole Model object', () => {
+    expect(model).toEqual({
+      minValue: 0,
+      maxValue: 100,
+      range: 100,
+      startSelectedValue: 25,
+      endSelectedValue: 75,
+      observers: [],
+    });
   });
 });
 
