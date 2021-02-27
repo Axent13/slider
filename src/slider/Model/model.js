@@ -9,8 +9,6 @@ class Model extends Observer {
     this.range = this.maxValue - this.minValue;
     this.startSelectedValue = options.startSelectedValue || this.range / 4;
     this.endSelectedValue = options.endSelectedValue || this.range - this.range / 4;
-
-    this.observers = [];
   }
 
   getMinValue() {

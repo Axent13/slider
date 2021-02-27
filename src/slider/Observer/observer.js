@@ -1,4 +1,8 @@
 class Observer {
+  constructor() {
+    this.observers = [];
+  }
+
   subscribe(observer) {
     this.observers.push(observer);
   }

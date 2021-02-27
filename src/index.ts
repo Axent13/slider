@@ -1,4 +1,5 @@
 import './index.scss';
+import './slider/slider.scss';
 import './favicons/favicons';
 import Presenter from './slider/Presenter/presenter';
 

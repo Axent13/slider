@@ -1,9 +1,8 @@
-import '../slider.scss';
 import Model from '../Model/model';
 import View from '../View/view';
 
 class Presenter {
-  constructor($rootElement, options) {
+  constructor($rootElement, options = {}) {
     this.$rootElement = $rootElement;
     this.step = 1 / options.step;
 
