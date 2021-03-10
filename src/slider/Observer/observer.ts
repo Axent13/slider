@@ -1,19 +1,26 @@
+interface Action {
+  type: string;
+  data: number;
+}
+
 class Observer {
+  observers: any[];
+
   constructor() {
     this.observers = [];
   }
 
-  subscribe(observer) {
+  subscribe(observer: any) {
     this.observers.push(observer);
   }
 
-  unsubscribe(observer) {
+  unsubscribe(observer: any) {
     this.observers = this.observers.filter((currentObserver) => currentObserver !== observer);
   }
 
-  emit({ type, data }) {
+  emit(action: Action) {
     this.observers.forEach((currentObserver) => {
-      currentObserver.update({ type, data });
+      currentObserver.update(action);
     });
   }
 }

@@ -1,7 +1,20 @@
-import Observer from '../Observer/observer';
+import Observer from '../Observer/observer.ts';
+
+interface ModelOptions {
+  minValue?: number;
+  maxValue?: number;
+  startSelectedValue?: number;
+  endSelectedValue?: number;
+}
 
 class Model extends Observer {
-  constructor(options = {}) {
+  minValue: number;
+  maxValue: number;
+  range: number;
+  startSelectedValue: number;
+  endSelectedValue: number;
+
+  constructor(options: ModelOptions) {
     super();
 
     this.minValue = options.minValue || 0;
@@ -31,26 +44,26 @@ class Model extends Observer {
     return this.endSelectedValue;
   }
 
-  setMinValue(newValue) {
+  setMinValue(newValue: number) {
     this.minValue = newValue;
     this.setRange(this.minValue, this.maxValue);
   }
 
-  setMaxValue(newValue) {
+  setMaxValue(newValue: number) {
     this.maxValue = newValue;
     this.setRange(this.minValue, this.maxValue);
   }
 
-  setRange(newMinValue, newMaxValue) {
+  setRange(newMinValue: number, newMaxValue: number) {
     this.range = newMaxValue - newMinValue;
   }
 
-  setStartSelectedValue(newValue) {
+  setStartSelectedValue(newValue: number) {
     this.startSelectedValue = newValue;
     this.emit({ type: 'modelUpdatedStartSelectedValue', data: this.startSelectedValue });
   }
 
-  setEndSelectedValue(newValue) {
+  setEndSelectedValue(newValue: number) {
     this.endSelectedValue = newValue;
     this.emit({ type: 'modelUpdatedEndSelectedValue', data: this.endSelectedValue });
   }

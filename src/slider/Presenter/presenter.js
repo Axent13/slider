@@ -1,5 +1,5 @@
-import Model from '../Model/model';
-import View from '../View/view';
+import Model from '../Model/model.ts';
+import View from '../View/view.ts';
 
 class Presenter {
   constructor($rootElement, options = {}) {
