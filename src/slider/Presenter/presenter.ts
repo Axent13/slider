@@ -42,11 +42,17 @@ class Presenter {
 
   _pixelsToValue(pixels: number) {
     const sliderWidth = $(this.$rootElement).width() || 0;
+    console.log(`((pixels ${pixels} * this.model.getRange() ${this.model.getRange()}) / sliderWidth ${sliderWidth}) * this.step ${this.step}) / this.step ${this.step}`);
+    console.log(`Result of pixelsToValue: ${Math.round(((pixels * this.model.getRange()) / sliderWidth) * this.step) / this.step}`);
+
     return Math.round(((pixels * this.model.getRange()) / sliderWidth) * this.step) / this.step;
   }
 
   _valueToPixels(value: number) {
     const sliderWidth = $(this.$rootElement).width() || 0;
+    console.log(`(sliderWidth ${sliderWidth} * value ${value}) / this.model.getRange() ${this.model.getRange()}`);
+    console.log(`Result of valueToPixels: ${Math.round((sliderWidth * value) / this.model.getRange())}`);
+
     return Math.round((sliderWidth * value) / this.model.getRange());
   }
 
