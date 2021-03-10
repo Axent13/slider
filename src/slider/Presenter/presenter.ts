@@ -1,8 +1,19 @@
 import Model from '../Model/model.ts';
 import View from '../View/view.ts';
 
+interface IControllerOptions {
+  step: number;
+  minValue: number;
+  maxValue: number;
+}
+
 class Presenter {
-  constructor($rootElement, options = {}) {
+  $rootElement: HTMLElement;
+  step: number;
+  model: Model;
+  view: View;
+
+  constructor($rootElement: HTMLElement, options: IControllerOptions) {
     this.$rootElement = $rootElement;
     this.step = 1 / options.step;
 
@@ -29,16 +40,17 @@ class Presenter {
     this.view.setEndLimitValue(this.model.getMaxValue());
   }
 
-  _pixelsToValue(pixels) {
-    // eslint-disable-next-line max-len
-    return Math.round(((pixels * this.model.getRange()) / $(this.$rootElement).width()) * this.step) / this.step;
+  _pixelsToValue(pixels: number) {
+    const sliderWidth = $(this.$rootElement).width() || 0;
+    return Math.round(((pixels * this.model.getRange()) / sliderWidth) * this.step) / this.step;
   }
 
-  _valueToPixels(value) {
-    return Math.round(($(this.$rootElement).width() * value) / this.model.getRange());
+  _valueToPixels(value: number) {
+    const sliderWidth = $(this.$rootElement).width() || 0;
+    return Math.round((sliderWidth * value) / this.model.getRange());
   }
 
-  update(action) {
+  update(action: {type: string, data: number}) {
     switch (action.type) {
       case 'sliderClickedCloserToStartPoint': {
         const newValue = this._pixelsToValue(action.data);
@@ -73,7 +85,7 @@ class Presenter {
         break;
       }
       default:
-        this.model.receivedData = 'no data received';
+        console.log('Unknown action type');
         break;
     }
   }

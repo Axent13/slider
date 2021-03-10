@@ -198,7 +198,6 @@ class View extends Observer {
   }
 
   _handleStartPointMouseMove(event: any) {
-    console.log(event.type);
     const sliderStartCoordinate = $(this.$rootElement).offset()?.left || 0;
     let newPosition = event.pageX - sliderStartCoordinate;
     const sliderWidth = $(this.$rootElement).width() || 0;
@@ -224,9 +223,11 @@ class View extends Observer {
   }
 
   _handleEndPointMouseMove(event: any) {
-    const sliderEndCoordinate = $(this.$rootElement).offset().left + $(this.$rootElement).width();
+    const sliderWidth = $(this.$rootElement).width() || 0;
+    const sliderStartCoordinate = $(this.$rootElement).offset()?.left || 0;
+    const sliderEndCoordinate = sliderStartCoordinate + sliderWidth;
     let newPosition = sliderEndCoordinate - event.pageX;
-    const startPointCoordinate = $(this.$rootElement).width() - parseInt($(this.$rangeLineElement).css('left'), 10);
+    const startPointCoordinate = sliderWidth - parseInt($(this.$rangeLineElement).css('left'), 10);
 
     if (newPosition <= 0) {
       newPosition = 0;
