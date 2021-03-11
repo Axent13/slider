@@ -7,7 +7,7 @@ const $sliderContainers = ('.js-slider-page__slider-container');
 const sliderOptions = {
   minValue: 0,
   maxValue: 100,
-  step: 10,
+  step: 1,
 };
 
 $($sliderContainers).each((index, node) => {

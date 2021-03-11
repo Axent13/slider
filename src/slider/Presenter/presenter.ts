@@ -32,61 +32,61 @@ class Presenter {
   setInitialViewValues() {
     const startValue = this.model.getStartSelectedValue();
     const endValue = this.model.getEndSelectedValue();
-    this.view.setStartPointPosition(this._valueToPixels(startValue));
+    this.view.setStartPointPosition(this._transformModelValueToViewPercent(startValue));
     this.view.setStartTipValue(startValue);
     this.view.setStartLimitValue(this.model.getMinValue());
-    this.view.setEndPointPosition(this._valueToPixels(this.model.getMaxValue() - endValue));
-    this.view.setEndTipValue(endValue);
+    this.view.setEndPointPosition(this._transformModelValueToViewPercent(endValue));
+    this.view.setEndTipValue(100 - endValue);
     this.view.setEndLimitValue(this.model.getMaxValue());
   }
 
-  _pixelsToValue(pixels: number) {
-    const sliderWidth = $(this.$rootElement).width() || 0;
-    console.log(`((pixels ${pixels} * this.model.getRange() ${this.model.getRange()}) / sliderWidth ${sliderWidth}) * this.step ${this.step}) / this.step ${this.step}`);
-    console.log(`Result of pixelsToValue: ${Math.round(((pixels * this.model.getRange()) / sliderWidth) * this.step) / this.step}`);
+  // eslint-disable-next-line class-methods-use-this
+  _transformViewPercentToModelValue(pixels: number) {
+    // const sliderWidth = $(this.$rootElement).width() || 0;
 
-    return Math.round(((pixels * this.model.getRange()) / sliderWidth) * this.step) / this.step;
+    // return Math.round(((pixels * this.model.getRange()) / sliderWidth) * this.step) / this.step;
+    return pixels;
   }
 
-  _valueToPixels(value: number) {
-    const sliderWidth = $(this.$rootElement).width() || 0;
-    console.log(`(sliderWidth ${sliderWidth} * value ${value}) / this.model.getRange() ${this.model.getRange()}`);
-    console.log(`Result of valueToPixels: ${Math.round((sliderWidth * value) / this.model.getRange())}`);
+  // eslint-disable-next-line class-methods-use-this
+  _transformModelValueToViewPercent(value: number) {
+    // const sliderWidth = $(this.$rootElement).width() || 0;
 
-    return Math.round((sliderWidth * value) / this.model.getRange());
+    // return Math.round((sliderWidth * value) / this.model.getRange());
+    return value;
   }
 
   update(action: {type: string, data: number}) {
     switch (action.type) {
       case 'sliderClickedCloserToStartPoint': {
-        const newValue = this._pixelsToValue(action.data);
+        const newValue = this._transformViewPercentToModelValue(action.data);
         this.model.setStartSelectedValue(newValue);
         break;
       }
       case 'sliderClickedCloserToEndPoint': {
-        const newValue = this._pixelsToValue(action.data);
+        const newValue = this._transformViewPercentToModelValue(action.data);
         this.model.setEndSelectedValue(newValue);
         break;
       }
       case 'modelUpdatedStartSelectedValue': {
-        const newValue = this._valueToPixels(action.data);
+        const newValue = this._transformModelValueToViewPercent(action.data);
         this.view.setStartPointPosition(newValue);
         this.view.setStartTipValue(action.data);
         break;
       }
       case 'modelUpdatedEndSelectedValue': {
-        const newValue = this._valueToPixels(action.data);
+        const newValue = this._transformModelValueToViewPercent(action.data);
         this.view.setEndPointPosition(newValue);
         this.view.setEndTipValue(this.model.getMaxValue() - action.data);
         break;
       }
       case 'startPointMoved': {
-        const newValue = this._pixelsToValue(action.data);
+        const newValue = this._transformViewPercentToModelValue(action.data);
         this.model.setStartSelectedValue(newValue);
         break;
       }
       case 'endPointMoved': {
-        const newValue = this._pixelsToValue(action.data);
+        const newValue = this._transformViewPercentToModelValue(action.data);
         this.model.setEndSelectedValue(newValue);
         break;
       }

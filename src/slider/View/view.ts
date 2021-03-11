@@ -145,7 +145,7 @@ class View extends Observer {
   }
 
   setStartPointPosition(coordinate: number) {
-    $(this.$rangeLineElement).css('left', `${coordinate}px`);
+    $(this.$rangeLineElement).css('left', `${coordinate}%`);
   }
 
   setStartTipValue(value: number) {
@@ -157,38 +157,43 @@ class View extends Observer {
   }
 
   setEndPointPosition(coordinate: number) {
-    $(this.$rangeLineElement).css('right', `${coordinate}px`);
+    $(this.$rangeLineElement).css('right', `${100 - coordinate}%`);
   }
 
   setEndTipValue(value: number) {
-    $(this.$endTipElement).text(value);
+    $(this.$endTipElement).text(100 - value);
   }
 
   setEndLimitValue(value: number) {
     $(this.$endLimitValueElement).text(value);
   }
 
+  getSliderWidth() {
+    return $(this.$rootElement).width();
+  }
+
   _handleSliderClick(event: any) {
     console.log('Slider clicked!');
     const sliderStartCoordinate = $(this.$backgroundLineElement).offset()?.left || 0;
-    const sliderWidth = $(this.$rootElement).width() || 0;
-    const sliderEndCoordinate = sliderStartCoordinate + sliderWidth;
+    const sliderWidth = this.getSliderWidth() || 0;
 
     // Вычисляю координаты середины выделенной области слайдера,
     // чтобы определить, ближе к какому из бегунков был совершен клик
-    const startPointCoordinate = parseInt($(this.$rangeLineElement).css('left'), 10) + sliderStartCoordinate;
-    const rangeLineWidth = $(this.$rangeLineElement).width() || 0;
-    const rangeLineCenterCoordinate = startPointCoordinate + rangeLineWidth / 2;
-    if (event.pageX <= rangeLineCenterCoordinate) {
-      const newPosition = event.pageX - sliderStartCoordinate;
-      if (newPosition >= 0) {
-        this.emit({ type: 'sliderClickedCloserToStartPoint', data: newPosition });
-      }
+    const rangeLineCssLeftValue = this.$rangeLineElement.style.left;
+    const startPointCoordinate = parseInt(rangeLineCssLeftValue.slice(0, -1), 10);
+    const rangeLineCssRightValue = this.$rangeLineElement.style.right;
+    const endPointCoordinate = 100 - parseInt(rangeLineCssRightValue.slice(0, -1), 10);
+
+    const rangeLineCenterCoordinate = (startPointCoordinate + endPointCoordinate) / 2;
+    const clickCoordinate = ((event.pageX - sliderStartCoordinate) * 100) / sliderWidth;
+    console.log(`startPointCoordinate: ${startPointCoordinate}\nendPointCoordinate: ${endPointCoordinate}`);
+
+    console.log(`rangeLineCenterCoordinate: ${rangeLineCenterCoordinate}\nclickCoordinate: ${clickCoordinate}`);
+
+    if (clickCoordinate < rangeLineCenterCoordinate) {
+      this.emit({ type: 'sliderClickedCloserToStartPoint', data: clickCoordinate });
     } else {
-      const newPosition = sliderEndCoordinate - event.pageX;
-      if (newPosition >= 0) {
-        this.emit({ type: 'sliderClickedCloserToEndPoint', data: newPosition });
-      }
+      this.emit({ type: 'sliderClickedCloserToEndPoint', data: clickCoordinate });
     }
   }
 
@@ -200,7 +205,7 @@ class View extends Observer {
   _handleStartPointMouseMove(event: any) {
     const sliderStartCoordinate = $(this.$rootElement).offset()?.left || 0;
     let newPosition = event.pageX - sliderStartCoordinate;
-    const sliderWidth = $(this.$rootElement).width() || 0;
+    const sliderWidth = this.getSliderWidth() || 0;
     const endPointCoordinate = sliderWidth - parseInt($(this.$rangeLineElement).css('right'), 10);
 
     if (newPosition <= 0) {
@@ -223,7 +228,7 @@ class View extends Observer {
   }
 
   _handleEndPointMouseMove(event: any) {
-    const sliderWidth = $(this.$rootElement).width() || 0;
+    const sliderWidth = this.getSliderWidth() || 0;
     const sliderStartCoordinate = $(this.$rootElement).offset()?.left || 0;
     const sliderEndCoordinate = sliderStartCoordinate + sliderWidth;
     let newPosition = sliderEndCoordinate - event.pageX;
