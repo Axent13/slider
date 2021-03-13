@@ -173,8 +173,7 @@ class View extends Observer {
   }
 
   _handleSliderClick(event: any) {
-    console.log('Slider clicked!');
-    const sliderStartCoordinate = $(this.$backgroundLineElement).offset()?.left || 0;
+    const sliderStartCoordinate = $(this.$rootElement).offset()?.left || 0;
     const sliderWidth = this.getSliderWidth() || 0;
 
     // Вычисляю координаты середины выделенной области слайдера,
@@ -185,15 +184,12 @@ class View extends Observer {
     const endPointCoordinate = 100 - parseInt(rangeLineCssRightValue.slice(0, -1), 10);
 
     const rangeLineCenterCoordinate = (startPointCoordinate + endPointCoordinate) / 2;
-    const clickCoordinate = ((event.pageX - sliderStartCoordinate) * 100) / sliderWidth;
-    console.log(`startPointCoordinate: ${startPointCoordinate}\nendPointCoordinate: ${endPointCoordinate}`);
+    const mouseCoordinateInPercents = ((event.pageX - sliderStartCoordinate) * 100) / sliderWidth;
 
-    console.log(`rangeLineCenterCoordinate: ${rangeLineCenterCoordinate}\nclickCoordinate: ${clickCoordinate}`);
-
-    if (clickCoordinate < rangeLineCenterCoordinate) {
-      this.emit({ type: 'sliderClickedCloserToStartPoint', data: clickCoordinate });
+    if (mouseCoordinateInPercents < rangeLineCenterCoordinate) {
+      this.emit({ type: 'sliderClickedCloserToStartPoint', data: mouseCoordinateInPercents });
     } else {
-      this.emit({ type: 'sliderClickedCloserToEndPoint', data: clickCoordinate });
+      this.emit({ type: 'sliderClickedCloserToEndPoint', data: mouseCoordinateInPercents });
     }
   }
 
@@ -204,17 +200,20 @@ class View extends Observer {
 
   _handleStartPointMouseMove(event: any) {
     const sliderStartCoordinate = $(this.$rootElement).offset()?.left || 0;
-    let newPosition = event.pageX - sliderStartCoordinate;
     const sliderWidth = this.getSliderWidth() || 0;
-    const endPointCoordinate = sliderWidth - parseInt($(this.$rangeLineElement).css('right'), 10);
+    const rangeLineCssRightValue = this.$rangeLineElement.style.right;
+    const endPointCoordinate = 100 - parseInt(rangeLineCssRightValue.slice(0, -1), 10);
 
-    if (newPosition <= 0) {
-      newPosition = 0;
-    } else if (newPosition >= endPointCoordinate) {
-      newPosition = endPointCoordinate;
+    const mouseCoordinateInPercents = ((event.pageX - sliderStartCoordinate) * 100) / sliderWidth;
+    let newStartPointPostion = mouseCoordinateInPercents;
+
+    if (mouseCoordinateInPercents <= 0) {
+      newStartPointPostion = 0;
+    } else if (mouseCoordinateInPercents >= endPointCoordinate) {
+      newStartPointPostion = endPointCoordinate;
     }
 
-    this.emit({ type: 'startPointMoved', data: newPosition });
+    this.emit({ type: 'startPointMoved', data: newStartPointPostion });
   }
 
   _handleStartPointMouseUp() {
@@ -228,18 +227,20 @@ class View extends Observer {
   }
 
   _handleEndPointMouseMove(event: any) {
-    const sliderWidth = this.getSliderWidth() || 0;
     const sliderStartCoordinate = $(this.$rootElement).offset()?.left || 0;
-    const sliderEndCoordinate = sliderStartCoordinate + sliderWidth;
-    let newPosition = sliderEndCoordinate - event.pageX;
-    const startPointCoordinate = sliderWidth - parseInt($(this.$rangeLineElement).css('left'), 10);
+    const sliderWidth = this.getSliderWidth() || 0;
+    const rangeLineCssLeftValue = this.$rangeLineElement.style.left;
+    const startPointCoordinate = parseInt(rangeLineCssLeftValue.slice(0, -1), 10);
 
-    if (newPosition <= 0) {
-      newPosition = 0;
-    } else if (newPosition >= startPointCoordinate) {
-      newPosition = startPointCoordinate;
+    const mouseCoordinateInPercents = ((event.pageX - sliderStartCoordinate) * 100) / sliderWidth;
+    let newEndPointPostion = mouseCoordinateInPercents;
+
+    if (mouseCoordinateInPercents >= 100) {
+      newEndPointPostion = 100;
+    } else if (mouseCoordinateInPercents <= startPointCoordinate) {
+      newEndPointPostion = startPointCoordinate;
     }
-    this.emit({ type: 'endPointMoved', data: newPosition });
+    this.emit({ type: 'endPointMoved', data: newEndPointPostion });
   }
 
   _handleEndPointMouseUp() {
