@@ -20,8 +20,8 @@ class Model extends Observer {
     this.minValue = options.minValue || 0;
     this.maxValue = options.maxValue || 100;
     this.range = this.maxValue - this.minValue;
-    this.startSelectedValue = options.startSelectedValue || this.range / 4;
-    this.endSelectedValue = options.endSelectedValue || this.range - this.range / 4;
+    this.startSelectedValue = options.startSelectedValue || (this.range / 4 + this.minValue);
+    this.endSelectedValue = options.endSelectedValue || (this.range - this.range / 4 + this.minValue);
   }
 
   getMinValue() {

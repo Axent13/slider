@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import Model from '../Model/model.ts';
 import View from '../View/view.ts';
 
@@ -30,30 +31,24 @@ class Presenter {
   }
 
   setInitialViewValues() {
-    const startValue = this.model.getStartSelectedValue();
-    const endValue = this.model.getEndSelectedValue();
-    this.view.setStartPointPosition(this._transformModelValueToViewPercent(startValue));
-    this.view.setStartTipValue(startValue);
+    const startSelectedValue = this.model.getStartSelectedValue();
+    const endSelectedValue = this.model.getEndSelectedValue();
+    this.view.setStartPointPosition(this._transformModelValueToViewPercent(startSelectedValue));
+    this.view.setStartTipValue(startSelectedValue);
     this.view.setStartLimitValue(this.model.getMinValue());
-    this.view.setEndPointPosition(this._transformModelValueToViewPercent(endValue));
-    this.view.setEndTipValue(100 - endValue);
+    this.view.setEndPointPosition(this._transformModelValueToViewPercent(endSelectedValue));
+    this.view.setEndTipValue(100 - endSelectedValue);
     this.view.setEndLimitValue(this.model.getMaxValue());
   }
 
   // eslint-disable-next-line class-methods-use-this
-  _transformViewPercentToModelValue(pixels: number) {
-    // const sliderWidth = $(this.$rootElement).width() || 0;
-
-    // return Math.round(((pixels * this.model.getRange()) / sliderWidth) * this.step) / this.step;
-    return pixels;
+  _transformViewPercentToModelValue(percents: number) {
+    return ((percents * this.model.getRange()) / 100) + this.model.getMinValue();
   }
 
   // eslint-disable-next-line class-methods-use-this
   _transformModelValueToViewPercent(value: number) {
-    // const sliderWidth = $(this.$rootElement).width() || 0;
-
-    // return Math.round((sliderWidth * value) / this.model.getRange());
-    return value;
+    return ((value - this.model.getMinValue()) * 100) / this.model.getRange();
   }
 
   update(action: {type: string, data: number}) {
@@ -77,7 +72,7 @@ class Presenter {
       case 'modelUpdatedEndSelectedValue': {
         const newValue = this._transformModelValueToViewPercent(action.data);
         this.view.setEndPointPosition(newValue);
-        this.view.setEndTipValue(this.model.getMaxValue() - action.data);
+        this.view.setEndTipValue(100 - action.data);
         break;
       }
       case 'startPointMoved': {
