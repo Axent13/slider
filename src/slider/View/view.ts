@@ -175,6 +175,7 @@ class View extends Observer {
   _handleSliderClick(event: any) {
     const sliderStartCoordinate = $(this.$rootElement).offset()?.left || 0;
     const sliderWidth = this.getSliderWidth() || 0;
+    console.log(sliderWidth);
 
     // Вычисляю координаты середины выделенной области слайдера,
     // чтобы определить, ближе к какому из бегунков был совершен клик

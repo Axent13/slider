@@ -5,6 +5,7 @@ interface ModelOptions {
   maxValue?: number;
   startSelectedValue?: number;
   endSelectedValue?: number;
+  step?: number;
 }
 
 class Model extends Observer {
@@ -13,6 +14,7 @@ class Model extends Observer {
   range: number;
   startSelectedValue: number;
   endSelectedValue: number;
+  step: number;
 
   constructor(options: ModelOptions) {
     super();
@@ -22,6 +24,17 @@ class Model extends Observer {
     this.range = this.maxValue - this.minValue;
     this.startSelectedValue = options.startSelectedValue || (this.range / 4 + this.minValue);
     this.endSelectedValue = options.endSelectedValue || (this.range - this.range / 4 + this.minValue);
+    this.step = options.step || 1;
+  }
+
+  correctNewValueToStep(newValue: number) {
+    const reminder = newValue % this.step;
+
+    if (reminder < this.step / 2) {
+      return newValue - reminder;
+    }
+
+    return newValue - reminder + this.step;
   }
 
   getMinValue() {
@@ -37,20 +50,20 @@ class Model extends Observer {
   }
 
   getStartSelectedValue() {
-    return this.startSelectedValue;
+    return this.correctNewValueToStep(this.startSelectedValue);
   }
 
   getEndSelectedValue() {
-    return this.endSelectedValue;
+    return this.correctNewValueToStep(this.endSelectedValue);
   }
 
   setMinValue(newValue: number) {
-    this.minValue = newValue;
+    this.minValue = this.correctNewValueToStep(newValue);
     this.setRange(this.minValue, this.maxValue);
   }
 
   setMaxValue(newValue: number) {
-    this.maxValue = newValue;
+    this.maxValue = this.correctNewValueToStep(newValue);
     this.setRange(this.minValue, this.maxValue);
   }
 
@@ -59,12 +72,12 @@ class Model extends Observer {
   }
 
   setStartSelectedValue(newValue: number) {
-    this.startSelectedValue = newValue;
+    this.startSelectedValue = this.correctNewValueToStep(newValue);
     this.emit({ type: 'modelUpdatedStartSelectedValue', data: this.startSelectedValue });
   }
 
   setEndSelectedValue(newValue: number) {
-    this.endSelectedValue = newValue;
+    this.endSelectedValue = this.correctNewValueToStep(newValue);
     this.emit({ type: 'modelUpdatedEndSelectedValue', data: this.endSelectedValue });
   }
 }

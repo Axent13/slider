@@ -10,17 +10,17 @@ interface IControllerOptions {
 
 class Presenter {
   $rootElement: HTMLElement;
-  step: number;
+  // step: number;
   model: Model;
   view: View;
 
   constructor($rootElement: HTMLElement, options: IControllerOptions) {
     this.$rootElement = $rootElement;
-    this.step = 1 / options.step;
 
     this.model = new Model({
       minValue: options.minValue,
       maxValue: options.maxValue,
+      step: options.step,
     });
     this.view = new View($rootElement);
 
