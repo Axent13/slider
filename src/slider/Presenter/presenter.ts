@@ -2,7 +2,7 @@
 import Model from '../Model/model.ts';
 import View from '../View/view.ts';
 
-interface IControllerOptions {
+interface IPresenterOptions {
   step: number;
   minValue: number;
   maxValue: number;
@@ -10,11 +10,10 @@ interface IControllerOptions {
 
 class Presenter {
   $rootElement: HTMLElement;
-  // step: number;
   model: Model;
   view: View;
 
-  constructor($rootElement: HTMLElement, options: IControllerOptions) {
+  constructor($rootElement: HTMLElement, options: IPresenterOptions) {
     this.$rootElement = $rootElement;
 
     this.model = new Model({
@@ -83,6 +82,13 @@ class Presenter {
       case 'endPointMoved': {
         const newValue = this._transformViewPercentToModelValue(action.data);
         this.model.setEndSelectedValue(newValue);
+        break;
+      }
+      case 'modelUpdatedMinValue': {
+        // const newValue = this._transformModelValueToViewPercent(action.data);
+        // console.log(`after transform: ${newValue}`);
+        
+        this.view.setStartLimitValue(action.data);
         break;
       }
       default:

@@ -175,7 +175,6 @@ class View extends Observer {
   _handleSliderClick(event: any) {
     const sliderStartCoordinate = $(this.$rootElement).offset()?.left || 0;
     const sliderWidth = this.getSliderWidth() || 0;
-    console.log(sliderWidth);
 
     // Вычисляю координаты середины выделенной области слайдера,
     // чтобы определить, ближе к какому из бегунков был совершен клик
@@ -219,7 +218,10 @@ class View extends Observer {
 
   _handleStartPointMouseUp() {
     $(document).off('mousemove', this._handleStartPointMouseMove);
+    console.log('mousemove off');
+    
     $(document).off('mouseup', this._handleStartPointMouseUp);
+    console.log('mouseup off');
   }
 
   _handleEndPointMouseDown() {
@@ -250,7 +252,7 @@ class View extends Observer {
   }
 
   _initEventListeners() {
-    $(this.$rootElement).on('mousedown', this._handleSliderClick);
+    $(this.$sliderElement).on('mousedown', this._handleSliderClick);
     $(this.$startPointElement).on('mousedown', this._handleStartPointMouseDown);
     $(this.$endPointElement).on('mousedown', this._handleEndPointMouseDown);
   }

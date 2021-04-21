@@ -1,0 +1,26 @@
+.slider-tweak {
+  margin-top: 2rem;
+  display: flex;
+  &__min-element {
+    display: flex;
+    align-items: center;
+    border: 0.03rem solid gray;
+    background-color: gray;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+  }
+  &__min-label {
+    padding: 1rem;
+    color: white;
+    font-weight: bold;
+  }
+  &__min-input {
+    display: block;
+    height: 100%;
+    padding-left: 1rem;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    color: gray;
+    outline: none;
+  }
+}
