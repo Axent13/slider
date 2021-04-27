@@ -65,15 +65,18 @@ class Model extends Observer {
     this.minValue = this.correctNewValueToStep(newValue);
     this.setRange(this.minValue, this.maxValue);
     this.emit({ type: 'modelUpdatedMinValue', data: this.minValue });
-    if (this.startSelectedValue < newValue) {
-      this.startSelectedValue = newValue;
-      this.emit({ type: 'modelUpdatedStartSelectedValue', data: this.minValue });
-    }
+    
+    this.startSelectedValue = this.correctNewValueToStep(this.range / 4 + this.minValue);
+    this.emit({ type: 'modelUpdatedStartSelectedValue', data: this.startSelectedValue });
   }
 
   setMaxValue(newValue: number) {
     this.maxValue = this.correctNewValueToStep(newValue);
     this.setRange(this.minValue, this.maxValue);
+    this.emit({ type: 'modelUpdatedMaxValue', data: this.maxValue });
+    
+    this.endSelectedValue = this.correctNewValueToStep(this.range - this.range / 4 + this.minValue);
+    this.emit({ type: 'modelUpdatedEndSelectedValue', data: this.endSelectedValue });
   }
 
   setRange(newMinValue: number, newMaxValue: number) {

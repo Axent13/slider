@@ -1,7 +1,7 @@
 .slider-tweak {
   margin-top: 2rem;
   display: flex;
-  &__min-element {
+  &__input-element {
     display: flex;
     align-items: center;
     border: 0.03rem solid gray;
@@ -9,12 +9,13 @@
     font-family: Arial, Helvetica, sans-serif;
     font-weight: bold;
   }
-  &__min-label {
+  &__input-label {
     padding: 1rem;
     color: white;
     font-weight: bold;
+    user-select: none;
   }
-  &__min-input {
+  &__input {
     display: block;
     height: 100%;
     padding-left: 1rem;

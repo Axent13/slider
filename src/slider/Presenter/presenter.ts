@@ -84,11 +84,12 @@ class Presenter {
         this.model.setEndSelectedValue(newValue);
         break;
       }
-      case 'modelUpdatedMinValue': {
-        // const newValue = this._transformModelValueToViewPercent(action.data);
-        // console.log(`after transform: ${newValue}`);
-        
+      case 'modelUpdatedMinValue': {        
         this.view.setStartLimitValue(action.data);
+        break;
+      }
+      case 'modelUpdatedMaxValue': {        
+        this.view.setEndLimitValue(action.data);
         break;
       }
       default:
