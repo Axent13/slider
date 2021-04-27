@@ -101,8 +101,11 @@ class Model extends Observer {
   }
 
   setStartSelectedValue(newValue: number) {
-    this.startSelectedValue = this.correctNewValueToStep(newValue);
-    this.emit({ type: 'modelUpdatedStartSelectedValue', data: this.startSelectedValue });
+    const newValueCorrectedToStep = this.correctNewValueToStep(newValue);
+    if (newValueCorrectedToStep < this.endSelectedValue) {
+      this.startSelectedValue = newValueCorrectedToStep;
+      this.emit({ type: 'modelUpdatedStartSelectedValue', data: this.startSelectedValue });
+    }
   }
 
   setEndSelectedValue(newValue: number) {
