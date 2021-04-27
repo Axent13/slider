@@ -11,6 +11,7 @@ class SliderTweak {
     this.handleMaxElementChange = this.handleMaxElementChange.bind(this);
     this.handleStepElementChange = this.handleStepElementChange.bind(this);
     this.handleFromElementChange = this.handleFromElementChange.bind(this);
+    this.handleToElementChange = this.handleToElementChange.bind(this);
     this.$sliderElement.appendChild(this.createTweakFields());
   }
 
@@ -26,6 +27,8 @@ class SliderTweak {
     $rootTweakElement.appendChild($stepElement);
     const $fromElement = this.createFromElement();
     $rootTweakElement.appendChild($fromElement);
+    const $toElement = this.createToElement();
+    $rootTweakElement.appendChild($toElement);
 
     return $rootTweakElement;
   }
@@ -127,6 +130,31 @@ class SliderTweak {
 
   handleFromElementChange(event: any) {    
     this.slider.presenter.model.setStartSelectedValue(event.currentTarget.value);
+  }
+
+  createToElement() {
+    const $toElement: HTMLElement = document.createElement('div');
+    $toElement.classList.add('slider-tweak__input-element');
+
+    const $toLabel: HTMLElement = document.createElement('label');
+    $toLabel.classList.add('slider-tweak__input-label');
+    $toLabel.innerText = 'to';
+
+    const $toInput: HTMLElement = document.createElement('input');
+    $toInput.classList.add('slider-tweak__input');
+    $toInput.setAttribute('type', 'number');
+    $toInput.setAttribute('value', `${this.slider.presenter.model.getEndSelectedValue()}`);
+    $toInput.setAttribute('step', `${this.slider.presenter.model.getStep()}`);
+    $($toInput).on('change', this.handleToElementChange);
+
+    $toElement.appendChild($toLabel);
+    $toElement.appendChild($toInput);
+
+    return $toElement;
+  }
+
+  handleToElementChange(event: any) {    
+    this.slider.presenter.model.setEndSelectedValue(event.currentTarget.value);
   }
 
 }

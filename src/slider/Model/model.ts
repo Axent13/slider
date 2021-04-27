@@ -83,13 +83,8 @@ class Model extends Observer {
     if (newValue <= 0) {
       this.step = 1;
     } else {
-      this.step = newValue;
-      console.log(`new step: ${this.step}`);
-      
-      console.log(`Before: ${this.startSelectedValue}`);
-      
+      this.step = newValue;      
       this.startSelectedValue = this.correctNewValueToStep(this.startSelectedValue);
-      console.log(`After: ${this.startSelectedValue}`);
       this.emit({ type: 'modelUpdatedStartSelectedValue', data: this.startSelectedValue });
       this.endSelectedValue = this.correctNewValueToStep(this.endSelectedValue);
       this.emit({ type: 'modelUpdatedEndSelectedValue', data: this.endSelectedValue });
@@ -102,15 +97,24 @@ class Model extends Observer {
 
   setStartSelectedValue(newValue: number) {
     const newValueCorrectedToStep = this.correctNewValueToStep(newValue);
-    if (newValueCorrectedToStep < this.endSelectedValue) {
+    if (newValueCorrectedToStep < this.minValue) {
+      this.startSelectedValue = this.minValue;
+      this.emit({ type: 'modelUpdatedStartSelectedValue', data: this.startSelectedValue });
+    } else if (newValueCorrectedToStep < this.endSelectedValue) {
       this.startSelectedValue = newValueCorrectedToStep;
       this.emit({ type: 'modelUpdatedStartSelectedValue', data: this.startSelectedValue });
     }
   }
 
   setEndSelectedValue(newValue: number) {
-    this.endSelectedValue = this.correctNewValueToStep(newValue);
-    this.emit({ type: 'modelUpdatedEndSelectedValue', data: this.endSelectedValue });
+    const newValueCorrectedToStep = this.correctNewValueToStep(newValue);
+    if (newValueCorrectedToStep > this.maxValue) {
+      this.endSelectedValue = this.maxValue;
+      this.emit({ type: 'modelUpdatedEndSelectedValue', data: this.endSelectedValue });
+    } else if (newValueCorrectedToStep > this.startSelectedValue) {
+      this.endSelectedValue = newValueCorrectedToStep;
+      this.emit({ type: 'modelUpdatedEndSelectedValue', data: this.endSelectedValue });
+    }
   }
 }
 
