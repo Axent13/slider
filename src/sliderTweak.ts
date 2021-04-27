@@ -9,6 +9,7 @@ class SliderTweak {
     this.$sliderElement = slider.presenter.$rootElement;
     this.handleMinElementChange = this.handleMinElementChange.bind(this);
     this.handleMaxElementChange = this.handleMaxElementChange.bind(this);
+    this.handleStepElementChange = this.handleStepElementChange.bind(this);
     this.$sliderElement.appendChild(this.createTweakFields());
   }
 
@@ -20,6 +21,8 @@ class SliderTweak {
     $rootTweakElement.appendChild($minElement);
     const $maxElement = this.createMaxElement();
     $rootTweakElement.appendChild($maxElement);
+    const $stepElement = this.createStepElement();
+    $rootTweakElement.appendChild($stepElement);
 
     return $rootTweakElement;
   }
@@ -72,6 +75,30 @@ class SliderTweak {
 
   handleMaxElementChange(event: any) {    
     this.slider.presenter.model.setMaxValue(event.currentTarget.value);
+  }
+
+  createStepElement() {
+    const $stepElement: HTMLElement = document.createElement('div');
+    $stepElement.classList.add('slider-tweak__input-element');
+
+    const $stepLabel: HTMLElement = document.createElement('label');
+    $stepLabel.classList.add('slider-tweak__input-label');
+    $stepLabel.innerText = 'step';
+    
+    const $stepInput: HTMLElement = document.createElement('input');
+    $stepInput.classList.add('slider-tweak__input');
+    $stepInput.setAttribute('type', 'number');
+    $stepInput.setAttribute('value', `${this.slider.presenter.model.getStep()}`);
+    $($stepInput).on('change', this.handleStepElementChange);
+
+    $stepElement.appendChild($stepLabel);
+    $stepElement.appendChild($stepInput);
+
+    return $stepElement;
+  }
+
+  handleStepElementChange(event: any) {    
+    this.slider.presenter.model.setStep(event.currentTarget.value);
   }
 
 }

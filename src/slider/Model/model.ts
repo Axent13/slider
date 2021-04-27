@@ -34,7 +34,7 @@ class Model extends Observer {
       return newValue - reminder;
     }
 
-    return newValue - reminder + this.step;
+    return newValue - reminder + Number(this.step);
   }
 
   getMinValue() {
@@ -77,6 +77,23 @@ class Model extends Observer {
     
     this.endSelectedValue = this.correctNewValueToStep(this.range - this.range / 4 + this.minValue);
     this.emit({ type: 'modelUpdatedEndSelectedValue', data: this.endSelectedValue });
+  }
+
+  setStep(newValue: number) {
+    if (newValue <= 0) {
+      this.step = 1;
+    } else {
+      this.step = newValue;
+      console.log(`new step: ${this.step}`);
+      
+      console.log(`Before: ${this.startSelectedValue}`);
+      
+      this.startSelectedValue = this.correctNewValueToStep(this.startSelectedValue);
+      console.log(`After: ${this.startSelectedValue}`);
+      this.emit({ type: 'modelUpdatedStartSelectedValue', data: this.startSelectedValue });
+      this.endSelectedValue = this.correctNewValueToStep(this.endSelectedValue);
+      this.emit({ type: 'modelUpdatedEndSelectedValue', data: this.endSelectedValue });
+    }
   }
 
   setRange(newMinValue: number, newMaxValue: number) {
