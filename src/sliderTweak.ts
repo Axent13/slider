@@ -13,6 +13,7 @@ class SliderTweak {
     this.handleFromElementChange = this.handleFromElementChange.bind(this);
     this.handleToElementChange = this.handleToElementChange.bind(this);
     this.handleVerticalElementChange = this.handleVerticalElementChange.bind(this);
+    this.handleRangeElementChange = this.handleRangeElementChange.bind(this);
     this.$sliderElement.appendChild(this.createTweakFields());
   }
 
@@ -32,6 +33,14 @@ class SliderTweak {
     $rootTweakElement.appendChild($toElement);
     const $verticalElement = this.createVerticalElement();
     $rootTweakElement.appendChild($verticalElement);
+    const $rangeElement = this.createRangeElement();
+    $rootTweakElement.appendChild($rangeElement);
+    const $scaleElement = this.createScaleElement();
+    $rootTweakElement.appendChild($scaleElement);
+    const $barElement = this.createBarElement();
+    $rootTweakElement.appendChild($barElement);
+    const $tipElement = this.createTipElement();
+    $rootTweakElement.appendChild($tipElement);
 
     return $rootTweakElement;
   }
@@ -186,6 +195,118 @@ class SliderTweak {
 
   handleVerticalElementChange(event: any) {    
     // this.slider.presenter.model.setEndSelectedValue(event.currentTarget.value); <- model.setVertical(true|false)
+  }
+
+  createRangeElement() {
+    const $rangeElement: HTMLElement = document.createElement('div');
+    $rangeElement.classList.add('slider-tweak__checkbox-element');
+
+    const $rangeLabel: HTMLElement = document.createElement('label');
+    $rangeLabel.classList.add('slider-tweak__checkbox-label');
+
+    const $rangeInput: HTMLElement = document.createElement('input');
+    $rangeInput.classList.add('slider-tweak__checkbox');
+    $rangeInput.setAttribute('type', 'checkbox');
+    // $rangeInput.setAttribute('value', `${this.slider.presenter.model.getEndSelectedValue()}`); <- model.isRange
+    $($rangeInput).on('change', this.handleVerticalElementChange);
+
+    const $rangeSpan: HTMLElement = document.createElement('span');
+    $rangeSpan.classList.add('slider-tweak__checkbox-span');
+    $rangeSpan.innerText = 'range';
+
+    $rangeLabel.appendChild($rangeInput);
+    $rangeLabel.appendChild($rangeSpan);
+    $rangeElement.appendChild($rangeLabel);
+
+    return $rangeElement;
+  }
+
+  handleRangeElementChange(event: any) {    
+    // this.slider.presenter.model.setEndSelectedValue(event.currentTarget.value); <- model.setRange(true|false)
+  }
+
+  createScaleElement() {
+    const $scaleElement: HTMLElement = document.createElement('div');
+    $scaleElement.classList.add('slider-tweak__checkbox-element');
+
+    const $scaleLabel: HTMLElement = document.createElement('label');
+    $scaleLabel.classList.add('slider-tweak__checkbox-label');
+
+    const $scaleInput: HTMLElement = document.createElement('input');
+    $scaleInput.classList.add('slider-tweak__checkbox');
+    $scaleInput.setAttribute('type', 'checkbox');
+    // $scaleInput.setAttribute('value', `${this.slider.presenter.model.getEndSelectedValue()}`); <- model.hasScale
+    $($scaleInput).on('change', this.handleVerticalElementChange);
+
+    const $scaleSpan: HTMLElement = document.createElement('span');
+    $scaleSpan.classList.add('slider-tweak__checkbox-span');
+    $scaleSpan.innerText = 'scale';
+
+    $scaleLabel.appendChild($scaleInput);
+    $scaleLabel.appendChild($scaleSpan);
+    $scaleElement.appendChild($scaleLabel);
+
+    return $scaleElement;
+  }
+
+  handleScaleElementChange(event: any) {    
+    // this.slider.presenter.model.setEndSelectedValue(event.currentTarget.value); <- model.toogleScale(true|false)
+  }
+
+  createBarElement() {
+    const $barElement: HTMLElement = document.createElement('div');
+    $barElement.classList.add('slider-tweak__checkbox-element');
+
+    const $barLabel: HTMLElement = document.createElement('label');
+    $barLabel.classList.add('slider-tweak__checkbox-label');
+
+    const $barInput: HTMLElement = document.createElement('input');
+    $barInput.classList.add('slider-tweak__checkbox');
+    $barInput.setAttribute('type', 'checkbox');
+    // $barInput.setAttribute('value', `${this.slider.presenter.model.getEndSelectedValue()}`); <- model.hasBar
+    $($barInput).on('change', this.handleVerticalElementChange);
+
+    const $barSpan: HTMLElement = document.createElement('span');
+    $barSpan.classList.add('slider-tweak__checkbox-span');
+    $barSpan.innerText = 'bar';
+
+    $barLabel.appendChild($barInput);
+    $barLabel.appendChild($barSpan);
+    $barElement.appendChild($barLabel);
+
+    return $barElement;
+  }
+
+  handleBarElementChange(event: any) {    
+    // this.slider.presenter.model.setEndSelectedValue(event.currentTarget.value); <- model.toogleBar(true|false)
+  }
+
+  createTipElement() {
+    const $tipElement: HTMLElement = document.createElement('div');
+    $tipElement.classList.add('slider-tweak__checkbox-element');
+
+    const $tipLabel: HTMLElement = document.createElement('label');
+    $tipLabel.classList.add('slider-tweak__checkbox-label');
+
+    const $tipInput: HTMLElement = document.createElement('input');
+    $tipInput.classList.add('slider-tweak__checkbox');
+    $tipInput.setAttribute('type', 'checkbox');
+    // $tipInput.setAttribute('value', `${this.slider.presenter.model.getEndSelectedValue()}`); <- model.hasTip
+    $($tipInput).on('change', this.handleVerticalElementChange);
+
+    const $tipSpan: HTMLElement = document.createElement('span');
+    $tipSpan.classList.add('slider-tweak__checkbox-span');
+    $tipSpan.innerText = 'tip';
+
+    $tipLabel.appendChild($tipInput);
+    $tipLabel.appendChild($tipSpan);
+    $tipElement.appendChild($tipLabel);
+
+    return $tipElement;
+  }
+
+  handleTipElementChange(event: any) {    
+    // this.slider.presenter.model.setEndSelectedValue(event.currentTarget.value); <- model.toogleTip(true|false)
   }
 
 }
