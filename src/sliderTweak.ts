@@ -12,6 +12,7 @@ class SliderTweak {
     this.handleStepElementChange = this.handleStepElementChange.bind(this);
     this.handleFromElementChange = this.handleFromElementChange.bind(this);
     this.handleToElementChange = this.handleToElementChange.bind(this);
+    this.handleVerticalElementChange = this.handleVerticalElementChange.bind(this);
     this.$sliderElement.appendChild(this.createTweakFields());
   }
 
@@ -29,6 +30,8 @@ class SliderTweak {
     $rootTweakElement.appendChild($fromElement);
     const $toElement = this.createToElement();
     $rootTweakElement.appendChild($toElement);
+    const $verticalElement = this.createVerticalElement();
+    $rootTweakElement.appendChild($verticalElement);
 
     return $rootTweakElement;
   }
@@ -155,6 +158,34 @@ class SliderTweak {
 
   handleToElementChange(event: any) {    
     this.slider.presenter.model.setEndSelectedValue(event.currentTarget.value);
+  }
+
+  createVerticalElement() {
+    const $verticalElement: HTMLElement = document.createElement('div');
+    $verticalElement.classList.add('slider-tweak__checkbox-element');
+
+    const $verticalLabel: HTMLElement = document.createElement('label');
+    $verticalLabel.classList.add('slider-tweak__checkbox-label');
+
+    const $verticalInput: HTMLElement = document.createElement('input');
+    $verticalInput.classList.add('slider-tweak__checkbox');
+    $verticalInput.setAttribute('type', 'checkbox');
+    // $verticalInput.setAttribute('value', `${this.slider.presenter.model.getEndSelectedValue()}`); <- model.isVertical
+    $($verticalInput).on('change', this.handleVerticalElementChange);
+
+    const $verticalSpan: HTMLElement = document.createElement('span');
+    $verticalSpan.classList.add('slider-tweak__checkbox-span');
+    $verticalSpan.innerText = 'vertical';
+
+    $verticalLabel.appendChild($verticalInput);
+    $verticalLabel.appendChild($verticalSpan);
+    $verticalElement.appendChild($verticalLabel);
+
+    return $verticalElement;
+  }
+
+  handleVerticalElementChange(event: any) {    
+    // this.slider.presenter.model.setEndSelectedValue(event.currentTarget.value); <- model.setVertical(true|false)
   }
 
 }

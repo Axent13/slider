@@ -24,5 +24,51 @@
     font-weight: bold;
     color: gray;
     outline: none;
+    user-select: none;
+  }
+  &__checkbox {
+    position: absolute;
+    z-index: -1;
+    opacity: 0;
+  }
+  &__checkbox-span {
+    position: relative;
+    display: inline-flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    user-select: none;
+  }
+  &__checkbox-span::before {
+    content: '';
+    display: inline-block;
+    width: 2rem;
+    height: 2rem;
+    flex-shrink: 0;
+    flex-grow: 0;
+    border: 1px solid #adb5bd;
+    background-color: gray;
+  }
+  &__checkbox-span::after {
+    content: '';
+    display: inline-block;
+    position: absolute;
+    right: 0.1rem;
+    top: 0.1rem;
+    width: 0.9rem;
+    height: 1.8rem;
+    flex-shrink: 0;
+    flex-grow: 0;
+    border: 1px solid #0e9499;
+    background-color: honeydew;
+  }
+  &__checkbox:not(:disabled):active+span::after {
+    background-color: #b3d7ff;
+    border-color: #b3d7ff;
+  }
+  &__checkbox:checked+span::after {
+    right: 1rem;
+  }
+  &__checkbox:disabled+span::after {
+    background-color: #e9ecef;
   }
 }
