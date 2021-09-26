@@ -1,9 +1,10 @@
 import Presenter from './Presenter/presenter';
 
 interface ISliderOptions {
-  step: number;
-  minValue: number;
-  maxValue: number;
+  step?: number;
+  minValue?: number;
+  maxValue?: number;
+  isVertical?: boolean;
 }
 
 class Slider {

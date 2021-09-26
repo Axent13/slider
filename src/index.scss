@@ -13,20 +13,11 @@ html {
   margin: 9rem auto 0;
   &__slider-container-first {
     width: 60%;
-    &>.slider {
-      height: 0.5rem;
-    }
   }
   &__slider-container-second {
     width: 30%;
-    &>.slider {
-      height: 2rem;
-    }
   }
   &__slider-container-third {
     width: 80%;
-    &>.slider {
-      height: 4rem;
-    }
   }
 }

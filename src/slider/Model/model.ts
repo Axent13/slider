@@ -1,6 +1,6 @@
 import Observer from '../Observer/observer.ts';
 
-interface ModelOptions {
+interface IModelOptions {
   minValue?: number;
   maxValue?: number;
   startSelectedValue?: number;
@@ -16,12 +16,13 @@ class Model extends Observer {
   endSelectedValue: number;
   step: number;
 
-  constructor(options: ModelOptions) {
+  constructor(options: IModelOptions) {
     super();
 
     this.minValue = options.minValue || 0;
     this.maxValue = options.maxValue || 100;
     this.range = this.maxValue - this.minValue;
+
     this.startSelectedValue = options.startSelectedValue || (this.range / 4 + this.minValue);
     this.endSelectedValue = options.endSelectedValue || (this.range - this.range / 4 + this.minValue);
     this.step = options.step || 1;
@@ -65,7 +66,7 @@ class Model extends Observer {
     this.minValue = this.correctNewValueToStep(newValue);
     this.setRange(this.minValue, this.maxValue);
     this.emit({ type: 'modelUpdatedMinValue', data: this.minValue });
-    
+
     this.startSelectedValue = this.correctNewValueToStep(this.range / 4 + this.minValue);
     this.emit({ type: 'modelUpdatedStartSelectedValue', data: this.startSelectedValue });
   }
@@ -74,7 +75,7 @@ class Model extends Observer {
     this.maxValue = this.correctNewValueToStep(newValue);
     this.setRange(this.minValue, this.maxValue);
     this.emit({ type: 'modelUpdatedMaxValue', data: this.maxValue });
-    
+
     this.endSelectedValue = this.correctNewValueToStep(this.range - this.range / 4 + this.minValue);
     this.emit({ type: 'modelUpdatedEndSelectedValue', data: this.endSelectedValue });
   }
@@ -83,7 +84,7 @@ class Model extends Observer {
     if (newValue <= 0) {
       this.step = 1;
     } else {
-      this.step = newValue;      
+      this.step = newValue;
       this.startSelectedValue = this.correctNewValueToStep(this.startSelectedValue);
       this.emit({ type: 'modelUpdatedStartSelectedValue', data: this.startSelectedValue });
       this.endSelectedValue = this.correctNewValueToStep(this.endSelectedValue);

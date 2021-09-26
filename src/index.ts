@@ -9,7 +9,9 @@ const $sliderContainers = ('.js-slider-page__slider-container');
 const sliderOptions = {
   minValue: 0,
   maxValue: 100,
+  startSelectedValue: 1,
   step: 1,
+  isVertical: false,
 };
 
 const sliders: Slider[] = [];

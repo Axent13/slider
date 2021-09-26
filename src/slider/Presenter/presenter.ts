@@ -3,9 +3,11 @@ import Model from '../Model/model.ts';
 import View from '../View/view.ts';
 
 interface IPresenterOptions {
-  step: number;
-  minValue: number;
-  maxValue: number;
+  step?: number;
+  minValue?: number;
+  maxValue?: number;
+  startSelectedValue?: number;
+  isVertical?: boolean;
 }
 
 class Presenter {
@@ -19,9 +21,13 @@ class Presenter {
     this.model = new Model({
       minValue: options.minValue,
       maxValue: options.maxValue,
+      startSelectedValue: options.startSelectedValue,
       step: options.step,
     });
-    this.view = new View($rootElement);
+    this.view = new View({
+      $rootElement: $rootElement,
+      isVertical: options.isVertical || false,
+    });
 
     this.model.subscribe(this);
     this.view.subscribe(this);

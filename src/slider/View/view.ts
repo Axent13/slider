@@ -1,7 +1,13 @@
 import Observer from '../Observer/observer.ts';
 
+interface IViewOptions {
+  $rootElement: HTMLElement;
+  isVertical?: boolean;
+}
+
 class View extends Observer {
   $rootElement: HTMLElement;
+  isVertical: boolean;
   $sliderElement: HTMLElement;
   $sliderValuesElement: HTMLElement;
   $startLimitValueElement: HTMLElement;
@@ -14,10 +20,11 @@ class View extends Observer {
   $endPointElement: HTMLElement;
   $endTipElement: HTMLElement;
 
-  constructor($rootElement: HTMLElement) {
+  constructor(options: IViewOptions) {
     super();
 
-    this.$rootElement = $rootElement;
+    this.$rootElement = options.$rootElement;
+    this.isVertical = options.isVertical || false;
     this.$sliderElement = View.createSliderElement();
     this.$sliderValuesElement = View.createSliderValuesElement();
     this.$startLimitValueElement = View.createStartLimitValueElement();
@@ -27,12 +34,12 @@ class View extends Observer {
     this.$endLimitValueElement = View.createEndLimitValueElement();
     this.$sliderValuesElement.append(this.$endLimitValueElement);
     this.$sliderElement.append(this.$sliderValuesElement);
-    this.$backgroundLineElement = View.createBackgroundLineElement();
-    this.$rangeLineElement = View.createRangeLineElement();
-    this.$startPointElement = View.createStartPointElement();
+    this.$backgroundLineElement = this.createBackgroundLineElement();
+    this.$rangeLineElement = this.createRangeLineElement();
+    this.$startPointElement = this.createStartPointElement();
     this.$startTipElement = View.createStartTipElement();
     this.$startPointElement.append(this.$startTipElement);
-    this.$endPointElement = View.createEndPointElement();
+    this.$endPointElement = this.createEndPointElement();
     this.$endTipElement = View.createEndTipElement();
     this.$endPointElement.append(this.$endTipElement);
     this.$rangeLineElement.append(this.$startPointElement);
@@ -86,27 +93,36 @@ class View extends Observer {
     return $endLimitValueElement;
   }
 
-  static createBackgroundLineElement() {
+  createBackgroundLineElement() {
     const $backgroundLineElement = document.createElement('div');
     $backgroundLineElement.classList.add('slider__background-line');
+    if (this.isVertical) {
+      $backgroundLineElement.classList.add('slider__background-line_vertical');
+    }
 
     return $backgroundLineElement;
   }
 
-  static createRangeLineElement() {
+  createRangeLineElement() {
     const $rangeLineElement = document.createElement('div');
     $rangeLineElement.classList.add('slider__range-line', 'js-slider__range-line');
+    if (this.isVertical) {
+      $rangeLineElement.classList.add('slider__range-line_vertical');
+    }
 
     return $rangeLineElement;
   }
 
-  static createStartPointElement() {
+  createStartPointElement() {
     const $startPointElement = document.createElement('div');
     $startPointElement.classList.add(
       'slider__point',
       'slider__point_position_start',
       'js-slider__point_position_start',
     );
+    if (this.isVertical) {
+      $startPointElement.classList.add('slider__point_position_start_vertical');
+    }
 
     return $startPointElement;
   }
@@ -122,13 +138,16 @@ class View extends Observer {
     return $startTipElement;
   }
 
-  static createEndPointElement() {
+  createEndPointElement() {
     const $endPointElement = document.createElement('div');
     $endPointElement.classList.add(
       'slider__point',
       'slider__point_position_end',
       'js-slider__point_position_end',
     );
+    if (this.isVertical) {
+      $endPointElement.classList.add('slider__point_position_end_vertical');
+    }
 
     return $endPointElement;
   }
@@ -145,7 +164,12 @@ class View extends Observer {
   }
 
   setStartPointPosition(coordinate: number) {
-    $(this.$rangeLineElement).css('left', `${coordinate}%`);
+    if (this.isVertical) {
+      $(this.$rangeLineElement).css('top', `${coordinate}%`);
+      $(this.$rangeLineElement).css('height', `${100 - coordinate}%`);
+    } else {
+      $(this.$rangeLineElement).css('left', `${coordinate}%`);
+    }
   }
 
   setStartTipValue(value: number) {
@@ -157,7 +181,13 @@ class View extends Observer {
   }
 
   setEndPointPosition(coordinate: number) {
-    $(this.$rangeLineElement).css('right', `${100 - coordinate}%`);
+    if (this.isVertical) {
+      const rangeLineCssTopValue = this.$rangeLineElement.style.top;
+      const startPointCoordinate = parseInt(rangeLineCssTopValue.slice(0, -1), 10);
+      $(this.$rangeLineElement).css('height', `${coordinate - startPointCoordinate}%`);
+    } else {
+      $(this.$rangeLineElement).css('right', `${100 - coordinate}%`);
+    }
   }
 
   setEndTipValue(value: number) {
@@ -172,19 +202,41 @@ class View extends Observer {
     return $(this.$rootElement).width();
   }
 
+  getSliderHeight() {
+    return $(this.$rootElement).height();
+  }
+
   _handleSliderClick(event: any) {
-    const sliderStartCoordinate = $(this.$rootElement).offset()?.left || 0;
-    const sliderWidth = this.getSliderWidth() || 0;
+    let rangeLineCenterCoordinate = 0; // null
+    let mouseCoordinateInPercents = 0; // null
 
-    // Вычисляю координаты середины выделенной области слайдера,
-    // чтобы определить, ближе к какому из бегунков был совершен клик
-    const rangeLineCssLeftValue = this.$rangeLineElement.style.left;
-    const startPointCoordinate = parseInt(rangeLineCssLeftValue.slice(0, -1), 10);
-    const rangeLineCssRightValue = this.$rangeLineElement.style.right;
-    const endPointCoordinate = 100 - parseInt(rangeLineCssRightValue.slice(0, -1), 10);
-
-    const rangeLineCenterCoordinate = (startPointCoordinate + endPointCoordinate) / 2;
-    const mouseCoordinateInPercents = ((event.pageX - sliderStartCoordinate) * 100) / sliderWidth;
+    if (this.isVertical) {
+      const sliderStartCoordinate = $(this.$rootElement).offset()?.top || 0;
+      const backgroundLineHeight = $(this.$backgroundLineElement).height() || 0;
+  
+      // Вычисляю координаты середины выделенной области слайдера,
+      // чтобы определить, ближе к какому из бегунков был совершен клик
+      const rangeLineCssTopValue = this.$rangeLineElement.style.top;      
+      const startPointCoordinate = parseInt(rangeLineCssTopValue.slice(0, -1), 10);
+      const rangeLineCssHeightValue = this.$rangeLineElement.style.height;      
+      const endPointCoordinate = parseInt(rangeLineCssHeightValue.slice(0, -1), 10) + startPointCoordinate;
+  
+      rangeLineCenterCoordinate = (startPointCoordinate + endPointCoordinate) / 2;
+      mouseCoordinateInPercents = ((event.pageY - sliderStartCoordinate) * 100) / backgroundLineHeight;
+    } else {
+      const sliderStartCoordinate = $(this.$rootElement).offset()?.left || 0;
+      const sliderWidth = this.getSliderWidth() || 0;
+  
+      // Вычисляю координаты середины выделенной области слайдера,
+      // чтобы определить, ближе к какому из бегунков был совершен клик
+      const rangeLineCssLeftValue = this.$rangeLineElement.style.left;
+      const startPointCoordinate = parseInt(rangeLineCssLeftValue.slice(0, -1), 10);
+      const rangeLineCssRightValue = this.$rangeLineElement.style.right;
+      const endPointCoordinate = 100 - parseInt(rangeLineCssRightValue.slice(0, -1), 10);
+  
+      rangeLineCenterCoordinate = (startPointCoordinate + endPointCoordinate) / 2;
+      mouseCoordinateInPercents = ((event.pageX - sliderStartCoordinate) * 100) / sliderWidth;
+    }
 
     if (mouseCoordinateInPercents < rangeLineCenterCoordinate) {
       this.emit({ type: 'sliderClickedCloserToStartPoint', data: mouseCoordinateInPercents });
@@ -199,18 +251,27 @@ class View extends Observer {
   }
 
   _handleStartPointMouseMove(event: any) {
-    const sliderStartCoordinate = $(this.$rootElement).offset()?.left || 0;
-    const sliderWidth = this.getSliderWidth() || 0;
-    const rangeLineCssRightValue = this.$rangeLineElement.style.right;
-    const endPointCoordinate = 100 - parseInt(rangeLineCssRightValue.slice(0, -1), 10);
+    let newStartPointPostion = null;
+    if (this.isVertical) {
+      const sliderStartCoordinate = $(this.$rootElement).offset()?.top || 0;
+      const backgroundLineHeight = $(this.$backgroundLineElement).height() || 0;
+      const mouseCoordinateInPercents = ((event.pageY - sliderStartCoordinate) * 100) / backgroundLineHeight;
 
-    const mouseCoordinateInPercents = ((event.pageX - sliderStartCoordinate) * 100) / sliderWidth;
-    let newStartPointPostion = mouseCoordinateInPercents;
+      newStartPointPostion = mouseCoordinateInPercents;
+    } else {
+      const sliderStartCoordinate = $(this.$rootElement).offset()?.left || 0;
+      const sliderWidth = this.getSliderWidth() || 0;
+      const rangeLineCssRightValue = this.$rangeLineElement.style.right;
+      const endPointCoordinate = 100 - parseInt(rangeLineCssRightValue.slice(0, -1), 10);
 
-    if (mouseCoordinateInPercents <= 0) {
-      newStartPointPostion = 0;
-    } else if (mouseCoordinateInPercents >= endPointCoordinate) {
-      newStartPointPostion = endPointCoordinate;
+      const mouseCoordinateInPercents = ((event.pageX - sliderStartCoordinate) * 100) / sliderWidth;
+      newStartPointPostion = mouseCoordinateInPercents;
+
+      if (mouseCoordinateInPercents <= 0) {
+        newStartPointPostion = 0;
+      } else if (mouseCoordinateInPercents >= endPointCoordinate) {
+        newStartPointPostion = endPointCoordinate;
+      }
     }
 
     this.emit({ type: 'startPointMoved', data: newStartPointPostion });
@@ -230,19 +291,29 @@ class View extends Observer {
   }
 
   _handleEndPointMouseMove(event: any) {
-    const sliderStartCoordinate = $(this.$rootElement).offset()?.left || 0;
-    const sliderWidth = this.getSliderWidth() || 0;
-    const rangeLineCssLeftValue = this.$rangeLineElement.style.left;
-    const startPointCoordinate = parseInt(rangeLineCssLeftValue.slice(0, -1), 10);
+    let newEndPointPostion = null;
+    if (this.isVertical) {
+      const sliderStartCoordinate = $(this.$rootElement).offset()?.top || 0;
+      const backgroundLineHeight = $(this.$backgroundLineElement).height() || 0;
+      const mouseCoordinateInPercents = ((event.pageY - sliderStartCoordinate) * 100) / backgroundLineHeight;
 
-    const mouseCoordinateInPercents = ((event.pageX - sliderStartCoordinate) * 100) / sliderWidth;
-    let newEndPointPostion = mouseCoordinateInPercents;
+      newEndPointPostion = mouseCoordinateInPercents;
+    } else {
+      const sliderStartCoordinate = $(this.$rootElement).offset()?.left || 0;
+      const sliderWidth = this.getSliderWidth() || 0;
+      const rangeLineCssLeftValue = this.$rangeLineElement.style.left;
+      const startPointCoordinate = parseInt(rangeLineCssLeftValue.slice(0, -1), 10);
 
-    if (mouseCoordinateInPercents >= 100) {
-      newEndPointPostion = 100;
-    } else if (mouseCoordinateInPercents <= startPointCoordinate) {
-      newEndPointPostion = startPointCoordinate;
+      const mouseCoordinateInPercents = ((event.pageX - sliderStartCoordinate) * 100) / sliderWidth;
+      newEndPointPostion = mouseCoordinateInPercents;
+
+      if (mouseCoordinateInPercents >= 100) {
+        newEndPointPostion = 100;
+      } else if (mouseCoordinateInPercents <= startPointCoordinate) {
+        newEndPointPostion = startPointCoordinate;
+      }
     }
+
     this.emit({ type: 'endPointMoved', data: newEndPointPostion });
   }
 
