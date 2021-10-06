@@ -13,7 +13,8 @@
     "no-underscore-dangle": "off",
     "no-new": "off",
     "no-unused-vars": "error",
-    "lines-between-class-members": ["error", "always", { "exceptAfterSingleLine": true }]
+    "lines-between-class-members": ["error", "always", { "exceptAfterSingleLine": true }],
+    "class-methods-use-this":"off"
   },
   "env": {
     "browser": true,

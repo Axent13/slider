@@ -25,7 +25,7 @@ class Presenter {
       step: options.step,
     });
     this.view = new View({
-      $rootElement: $rootElement,
+      $rootElement,
       isVertical: options.isVertical || false,
     });
 
@@ -90,11 +90,11 @@ class Presenter {
         this.model.setEndSelectedValue(newValue);
         break;
       }
-      case 'modelUpdatedMinValue': {        
+      case 'modelUpdatedMinValue': {
         this.view.setStartLimitValue(action.data);
         break;
       }
-      case 'modelUpdatedMaxValue': {        
+      case 'modelUpdatedMaxValue': {
         this.view.setEndLimitValue(action.data);
         break;
       }

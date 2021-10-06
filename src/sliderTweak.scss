@@ -1,17 +1,27 @@
 .slider-tweak {
   margin-top: 2rem;
-  display: flex;
+  &__inputs-section,
+  &__checkboxes-section {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
   &__input-element {
     display: flex;
     align-items: center;
-    border: 0.03rem solid gray;
-    background-color: gray;
+    margin: 0.5rem;
+    border: 0.03rem solid #6bd2c1;
+    background-color: #6bd2c1;
     font-family: Arial, Helvetica, sans-serif;
     font-weight: bold;
     user-select: none;
+
+    &:hover {
+      outline: 1px solid #4b973d;
+    }
   }
   &__input-label {
-    padding: 1rem;
+    padding: 0.6rem;
     color: white;
     font-weight: bold;
     user-select: none;
@@ -19,10 +29,12 @@
   &__input {
     display: block;
     height: 100%;
+    width: 4rem;
     padding-left: 1rem;
     font-family: Arial, Helvetica, sans-serif;
     font-weight: bold;
-    color: gray;
+    color: #6bd2c1;
+    border: none;
     outline: none;
     user-select: none;
   }
@@ -31,44 +43,52 @@
     z-index: -1;
     opacity: 0;
   }
+  &__checkbox-element {
+    margin: 0.5rem;
+  }
   &__checkbox-span {
     position: relative;
     display: inline-flex;
     flex-direction: row-reverse;
     align-items: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    color: #6bd2c1;
     user-select: none;
+    cursor: pointer;
   }
   &__checkbox-span::before {
     content: '';
     display: inline-block;
-    width: 2rem;
+    margin-left: 0.5rem;
+    width: 4rem;
     height: 2rem;
     flex-shrink: 0;
     flex-grow: 0;
-    border: 1px solid #adb5bd;
-    background-color: gray;
+    border: 0.03rem solid #6bd2c1;
+    background-color: #6bd2c1;
   }
   &__checkbox-span::after {
     content: '';
     display: inline-block;
     position: absolute;
-    right: 0.1rem;
-    top: 0.1rem;
-    width: 0.9rem;
-    height: 1.8rem;
+    right: 2rem;
+    width: 2rem;
+    height: 1.85rem;
     flex-shrink: 0;
     flex-grow: 0;
-    border: 1px solid #0e9499;
+    border: none;
     background-color: honeydew;
+    transition: right 0.1s ease;
   }
   &__checkbox:not(:disabled):active+span::after {
     background-color: #b3d7ff;
     border-color: #b3d7ff;
   }
   &__checkbox:checked+span::after {
-    right: 1rem;
+    right: 0.15rem;
   }
-  &__checkbox:disabled+span::after {
-    background-color: #e9ecef;
+  &__checkbox:checked+span::before {
+    outline: 2px solid #4b973d;
   }
 }

@@ -21,151 +21,81 @@ class SliderTweak {
     const $rootTweakElement = document.createElement('div');
     $rootTweakElement.classList.add('slider-tweak');
 
-    const $minElement = this.createMinElement();
-    $rootTweakElement.appendChild($minElement);
-    const $maxElement = this.createMaxElement();
-    $rootTweakElement.appendChild($maxElement);
-    const $stepElement = this.createStepElement();
-    $rootTweakElement.appendChild($stepElement);
-    const $fromElement = this.createFromElement();
-    $rootTweakElement.appendChild($fromElement);
-    const $toElement = this.createToElement();
-    $rootTweakElement.appendChild($toElement);
+    const minValue = this.slider.presenter.model.getMinValue();
+    const step = this.slider.presenter.model.getStep();
+    const maxValue = this.slider.presenter.model.getMaxValue();
+    const startSelectedValue = this.slider.presenter.model.getStartSelectedValue();
+    const endSelectedValue = this.slider.presenter.model.getEndSelectedValue();
+
+    const $inputsSectionElement = document.createElement('div');
+    $inputsSectionElement.classList.add('slider-tweak__inputs-section');
+    const $minElement = this.createInputElement('min', minValue, step, this.handleMinElementChange);
+    $inputsSectionElement.appendChild($minElement);
+    const $maxElement = this.createInputElement('max', maxValue, step, this.handleMaxElementChange);
+    $inputsSectionElement.appendChild($maxElement);
+    const $stepElement = this.createInputElement('step', step, 1, this.handleStepElementChange);
+    $inputsSectionElement.appendChild($stepElement);
+    const $fromElement = this.createInputElement('from', startSelectedValue, step, this.handleFromElementChange);
+    $inputsSectionElement.appendChild($fromElement);
+    const $toElement = this.createInputElement('to', endSelectedValue, step, this.handleToElementChange);;
+    $inputsSectionElement.appendChild($toElement);
+    $rootTweakElement.appendChild($inputsSectionElement);
+
+    const $checkboxesSectionElement = document.createElement('div');
+    $checkboxesSectionElement.classList.add('slider-tweak__checkboxes-section');
     const $verticalElement = this.createVerticalElement();
-    $rootTweakElement.appendChild($verticalElement);
+    $checkboxesSectionElement.appendChild($verticalElement);
     const $rangeElement = this.createRangeElement();
-    $rootTweakElement.appendChild($rangeElement);
+    $checkboxesSectionElement.appendChild($rangeElement);
     const $scaleElement = this.createScaleElement();
-    $rootTweakElement.appendChild($scaleElement);
+    $checkboxesSectionElement.appendChild($scaleElement);
     const $barElement = this.createBarElement();
-    $rootTweakElement.appendChild($barElement);
+    $checkboxesSectionElement.appendChild($barElement);
     const $tipElement = this.createTipElement();
-    $rootTweakElement.appendChild($tipElement);
+    $checkboxesSectionElement.appendChild($tipElement);
+    $rootTweakElement.appendChild($checkboxesSectionElement);
 
     return $rootTweakElement;
   }
 
-  createMinElement() {
-    const $minElement: HTMLElement = document.createElement('div');
-    $minElement.classList.add('slider-tweak__input-element');
+  createInputElement(innerText: string, value: number, step: number, onChangeFunction: any) {
+    const $newElement: HTMLElement = document.createElement('div');
+    $newElement.classList.add('slider-tweak__input-element');
 
-    const $minLabel: HTMLElement = document.createElement('label');
-    $minLabel.classList.add('slider-tweak__input-label');
-    $minLabel.innerText = 'min';
+    const $newLabel: HTMLElement = document.createElement('label');
+    $newLabel.classList.add('slider-tweak__input-label');
+    $newLabel.innerText = innerText;
 
-    const $minInput: HTMLElement = document.createElement('input');
-    $minInput.classList.add('slider-tweak__input');
-    $minInput.setAttribute('type', 'number');
-    $minInput.setAttribute('value', `${this.slider.presenter.model.getMinValue()}`);
-    $minInput.setAttribute('step', `${this.slider.presenter.model.getStep()}`);
-    $($minInput).on('change', this.handleMinElementChange);
+    const $newInput: HTMLElement = document.createElement('input');
+    $newInput.classList.add('slider-tweak__input');
+    $newInput.setAttribute('type', 'number');
+    $newInput.setAttribute('value', `${value}`);
+    $newInput.setAttribute('step', `${step}`);
+    $($newInput).on('change', onChangeFunction);
 
-    $minElement.appendChild($minLabel);
-    $minElement.appendChild($minInput);
+    $newElement.appendChild($newLabel);
+    $newElement.appendChild($newInput);
 
-    return $minElement;
+    return $newElement;
   }
 
-  handleMinElementChange(event: any) {    
+  handleMinElementChange(event: any) {
     this.slider.presenter.model.setMinValue(event.currentTarget.value);
   }
 
-  createMaxElement() {
-    const $maxElement: HTMLElement = document.createElement('div');
-    $maxElement.classList.add('slider-tweak__input-element');
-
-    const $maxLabel: HTMLElement = document.createElement('label');
-    $maxLabel.classList.add('slider-tweak__input-label');
-    $maxLabel.innerText = 'max';
-    
-    const $maxInput: HTMLElement = document.createElement('input');
-    $maxInput.classList.add('slider-tweak__input');
-    $maxInput.setAttribute('type', 'number');
-    $maxInput.setAttribute('value', `${this.slider.presenter.model.getMaxValue()}`);
-    $maxInput.setAttribute('step', `${this.slider.presenter.model.getStep()}`);
-    $($maxInput).on('change', this.handleMaxElementChange);
-
-    $maxElement.appendChild($maxLabel);
-    $maxElement.appendChild($maxInput);
-
-    return $maxElement;
-  }
-
-  handleMaxElementChange(event: any) {    
+  handleMaxElementChange(event: any) {
     this.slider.presenter.model.setMaxValue(event.currentTarget.value);
   }
 
-  createStepElement() {
-    const $stepElement: HTMLElement = document.createElement('div');
-    $stepElement.classList.add('slider-tweak__input-element');
-
-    const $stepLabel: HTMLElement = document.createElement('label');
-    $stepLabel.classList.add('slider-tweak__input-label');
-    $stepLabel.innerText = 'step';
-    
-    const $stepInput: HTMLElement = document.createElement('input');
-    $stepInput.classList.add('slider-tweak__input');
-    $stepInput.setAttribute('type', 'number');
-    $stepInput.setAttribute('value', `${this.slider.presenter.model.getStep()}`);
-    $($stepInput).on('change', this.handleStepElementChange);
-
-    $stepElement.appendChild($stepLabel);
-    $stepElement.appendChild($stepInput);
-
-    return $stepElement;
-  }
-
-  handleStepElementChange(event: any) {    
+  handleStepElementChange(event: any) {
     this.slider.presenter.model.setStep(event.currentTarget.value);
   }
 
-  createFromElement() {
-    const $fromElement: HTMLElement = document.createElement('div');
-    $fromElement.classList.add('slider-tweak__input-element');
-
-    const $fromLabel: HTMLElement = document.createElement('label');
-    $fromLabel.classList.add('slider-tweak__input-label');
-    $fromLabel.innerText = 'from';
-
-    const $fromInput: HTMLElement = document.createElement('input');
-    $fromInput.classList.add('slider-tweak__input');
-    $fromInput.setAttribute('type', 'number');
-    $fromInput.setAttribute('value', `${this.slider.presenter.model.getStartSelectedValue()}`);
-    $fromInput.setAttribute('step', `${this.slider.presenter.model.getStep()}`);
-    $($fromInput).on('change', this.handleFromElementChange);
-
-    $fromElement.appendChild($fromLabel);
-    $fromElement.appendChild($fromInput);
-
-    return $fromElement;
-  }
-
-  handleFromElementChange(event: any) {    
+  handleFromElementChange(event: any) {
     this.slider.presenter.model.setStartSelectedValue(event.currentTarget.value);
   }
 
-  createToElement() {
-    const $toElement: HTMLElement = document.createElement('div');
-    $toElement.classList.add('slider-tweak__input-element');
-
-    const $toLabel: HTMLElement = document.createElement('label');
-    $toLabel.classList.add('slider-tweak__input-label');
-    $toLabel.innerText = 'to';
-
-    const $toInput: HTMLElement = document.createElement('input');
-    $toInput.classList.add('slider-tweak__input');
-    $toInput.setAttribute('type', 'number');
-    $toInput.setAttribute('value', `${this.slider.presenter.model.getEndSelectedValue()}`);
-    $toInput.setAttribute('step', `${this.slider.presenter.model.getStep()}`);
-    $($toInput).on('change', this.handleToElementChange);
-
-    $toElement.appendChild($toLabel);
-    $toElement.appendChild($toInput);
-
-    return $toElement;
-  }
-
-  handleToElementChange(event: any) {    
+  handleToElementChange(event: any) {
     this.slider.presenter.model.setEndSelectedValue(event.currentTarget.value);
   }
 
@@ -193,7 +123,7 @@ class SliderTweak {
     return $verticalElement;
   }
 
-  handleVerticalElementChange(event: any) {    
+  handleVerticalElementChange(event: any) {
     // this.slider.presenter.model.setEndSelectedValue(event.currentTarget.value); <- model.setVertical(true|false)
   }
 
@@ -221,7 +151,7 @@ class SliderTweak {
     return $rangeElement;
   }
 
-  handleRangeElementChange(event: any) {    
+  handleRangeElementChange(event: any) {
     // this.slider.presenter.model.setEndSelectedValue(event.currentTarget.value); <- model.setRange(true|false)
   }
 
@@ -249,7 +179,7 @@ class SliderTweak {
     return $scaleElement;
   }
 
-  handleScaleElementChange(event: any) {    
+  handleScaleElementChange(event: any) {
     // this.slider.presenter.model.setEndSelectedValue(event.currentTarget.value); <- model.toogleScale(true|false)
   }
 
@@ -277,7 +207,7 @@ class SliderTweak {
     return $barElement;
   }
 
-  handleBarElementChange(event: any) {    
+  handleBarElementChange(event: any) {
     // this.slider.presenter.model.setEndSelectedValue(event.currentTarget.value); <- model.toogleBar(true|false)
   }
 
@@ -305,10 +235,9 @@ class SliderTweak {
     return $tipElement;
   }
 
-  handleTipElementChange(event: any) {    
+  handleTipElementChange(event: any) {
     // this.slider.presenter.model.setEndSelectedValue(event.currentTarget.value); <- model.toogleTip(true|false)
   }
-
 }
 
 export default SliderTweak;
