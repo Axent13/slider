@@ -3,11 +3,15 @@ import Observer from '../Observer/observer.ts';
 interface IViewOptions {
   $rootElement: HTMLElement;
   isVertical?: boolean;
+  hasScale?: boolean;
+  scalePoints?: number;
 }
 
 class View extends Observer {
   $rootElement: HTMLElement;
   isVertical: boolean;
+  hasScale: boolean;
+  scalePoints: number;
   $sliderElement: HTMLElement;
   $sliderValuesElement: HTMLElement;
   $startLimitValueElement: HTMLElement;
@@ -19,12 +23,16 @@ class View extends Observer {
   $startTipElement: HTMLElement;
   $endPointElement: HTMLElement;
   $endTipElement: HTMLElement;
+  $scaleElement: HTMLElement;
 
   constructor(options: IViewOptions) {
     super();
 
     this.$rootElement = options.$rootElement;
     this.isVertical = options.isVertical || false;
+    this.hasScale = options.hasScale || false;
+    this.scalePoints = options.scalePoints || 5;
+
     this.$sliderElement = View.createSliderElement();
     this.$sliderValuesElement = View.createSliderValuesElement();
     this.$startLimitValueElement = View.createStartLimitValueElement();
@@ -34,6 +42,7 @@ class View extends Observer {
     this.$endLimitValueElement = View.createEndLimitValueElement();
     this.$sliderValuesElement.append(this.$endLimitValueElement);
     this.$sliderElement.append(this.$sliderValuesElement);
+
     this.$backgroundLineElement = this.createBackgroundLineElement();
     this.$rangeLineElement = this.createRangeLineElement();
     this.$startPointElement = this.createStartPointElement();
@@ -46,6 +55,10 @@ class View extends Observer {
     this.$rangeLineElement.append(this.$endPointElement);
     this.$backgroundLineElement.append(this.$rangeLineElement);
     this.$sliderElement.append(this.$backgroundLineElement);
+
+    this.$scaleElement = this.createScaleElement();
+    this.$sliderElement.append(this.$scaleElement);
+
     this.$rootElement.append(this.$sliderElement);
 
     this._handleSliderClick = this._handleSliderClick.bind(this);
@@ -138,6 +151,20 @@ class View extends Observer {
     return $startTipElement;
   }
 
+  createScaleElement() {
+    const $scaleElement = document.createElement('div');
+    $scaleElement.classList.add('slider__scale');
+
+    for (let pointIndex = 0; pointIndex < this.scalePoints - 1; pointIndex += 1) {
+      const $pointElement = document.createElement('div');
+      $pointElement.classList.add('slider__scale-point');
+      $scaleElement.append($pointElement);
+    }
+    $scaleElement.children[this.scalePoints - 2].classList.add('slider__scale-point_last'); // либо в css поиграться с last-child
+
+    return $scaleElement;
+  }
+
   createEndPointElement() {
     const $endPointElement = document.createElement('div');
     $endPointElement.classList.add(
@@ -213,27 +240,27 @@ class View extends Observer {
     if (this.isVertical) {
       const sliderStartCoordinate = $(this.$rootElement).offset()?.top || 0;
       const backgroundLineHeight = $(this.$backgroundLineElement).height() || 0;
-  
+
       // Вычисляю координаты середины выделенной области слайдера,
       // чтобы определить, ближе к какому из бегунков был совершен клик
-      const rangeLineCssTopValue = this.$rangeLineElement.style.top;      
+      const rangeLineCssTopValue = this.$rangeLineElement.style.top;
       const startPointCoordinate = parseInt(rangeLineCssTopValue.slice(0, -1), 10);
-      const rangeLineCssHeightValue = this.$rangeLineElement.style.height;      
+      const rangeLineCssHeightValue = this.$rangeLineElement.style.height;
       const endPointCoordinate = parseInt(rangeLineCssHeightValue.slice(0, -1), 10) + startPointCoordinate;
-  
+
       rangeLineCenterCoordinate = (startPointCoordinate + endPointCoordinate) / 2;
       mouseCoordinateInPercents = ((event.pageY - sliderStartCoordinate) * 100) / backgroundLineHeight;
     } else {
       const sliderStartCoordinate = $(this.$rootElement).offset()?.left || 0;
       const sliderWidth = this.getSliderWidth() || 0;
-  
+
       // Вычисляю координаты середины выделенной области слайдера,
       // чтобы определить, ближе к какому из бегунков был совершен клик
       const rangeLineCssLeftValue = this.$rangeLineElement.style.left;
       const startPointCoordinate = parseInt(rangeLineCssLeftValue.slice(0, -1), 10);
       const rangeLineCssRightValue = this.$rangeLineElement.style.right;
       const endPointCoordinate = 100 - parseInt(rangeLineCssRightValue.slice(0, -1), 10);
-  
+
       rangeLineCenterCoordinate = (startPointCoordinate + endPointCoordinate) / 2;
       mouseCoordinateInPercents = ((event.pageX - sliderStartCoordinate) * 100) / sliderWidth;
     }
@@ -280,7 +307,7 @@ class View extends Observer {
   _handleStartPointMouseUp() {
     $(document).off('mousemove', this._handleStartPointMouseMove);
     console.log('mousemove off');
-    
+
     $(document).off('mouseup', this._handleStartPointMouseUp);
     console.log('mouseup off');
   }

@@ -99,6 +99,7 @@ class SliderTweak {
     this.slider.presenter.model.setEndSelectedValue(event.currentTarget.value);
   }
 
+  // TODO: По-аналогии с инпутами попробовать сделать одну функцию для всех чекбоксов
   createVerticalElement() {
     const $verticalElement: HTMLElement = document.createElement('div');
     $verticalElement.classList.add('slider-tweak__checkbox-element');
