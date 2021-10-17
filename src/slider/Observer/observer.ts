@@ -1,6 +1,6 @@
 interface Action {
   type: string;
-  data: number;
+  data: any;
 }
 
 class Observer {

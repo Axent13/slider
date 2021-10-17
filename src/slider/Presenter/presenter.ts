@@ -8,6 +8,8 @@ interface IPresenterOptions {
   maxValue?: number;
   startSelectedValue?: number;
   isVertical?: boolean;
+  hasScale?: boolean;
+  scalePoints?: number;
 }
 
 class Presenter {
@@ -26,7 +28,9 @@ class Presenter {
     });
     this.view = new View({
       $rootElement,
-      isVertical: options.isVertical || false,
+      isVertical: options.isVertical,
+      hasScale: options.hasScale,
+      scalePoints: options.scalePoints,
     });
 
     this.model.subscribe(this);
@@ -44,6 +48,26 @@ class Presenter {
     this.view.setEndPointPosition(this._transformModelValueToViewPercent(endSelectedValue));
     this.view.setEndTipValue(100 - endSelectedValue);
     this.view.setEndLimitValue(this.model.getMaxValue());
+    this.view.setScaleValues(this.calculateScaleValues());
+  }
+
+  calculateScaleValues() {
+    const scaleValues = [];
+    const minValue = this.model.getMinValue();
+    const maxValue = this.model.getMaxValue();
+    const range = maxValue - minValue;
+    const scalePoints = this.view.getScalePoints();
+    const scaleDelta = range / (scalePoints - 1);
+
+    for (let valueIndex = 0; valueIndex < scalePoints; valueIndex += 1) {
+      const scaleValue = minValue + valueIndex * scaleDelta;
+
+      scaleValues.push(parseFloat(scaleValue.toFixed(2)));
+    }
+
+    console.log(`scaleValues: ${scaleValues}`);
+
+    return scaleValues;
   }
 
   // eslint-disable-next-line class-methods-use-this

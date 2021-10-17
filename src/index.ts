@@ -12,6 +12,7 @@ const sliderOptions = {
   startSelectedValue: 1,
   step: 1,
   isVertical: false,
+  scalePoints: 5,
 };
 
 const sliders: Slider[] = [];
