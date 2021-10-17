@@ -63,8 +63,6 @@ class Model extends Observer {
   }
 
   setMinValue(newValue: number) {
-    console.log('model.setMinValue Вызвалась!');
-
     this.minValue = this.correctNewValueToStep(newValue);
     this.setRange(this.minValue, this.maxValue);
     this.emit({ type: 'modelUpdatedMinValue', data: this.minValue });

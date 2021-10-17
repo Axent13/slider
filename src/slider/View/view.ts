@@ -331,10 +331,8 @@ class View extends Observer {
 
   _handleStartPointMouseUp() {
     $(document).off('mousemove', this._handleStartPointMouseMove);
-    console.log('mousemove off');
 
     $(document).off('mouseup', this._handleStartPointMouseUp);
-    console.log('mouseup off');
   }
 
   _handleEndPointMouseDown() {

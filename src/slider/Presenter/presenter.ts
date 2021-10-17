@@ -65,8 +65,6 @@ class Presenter {
       scaleValues.push(parseFloat(scaleValue.toFixed(2)));
     }
 
-    console.log(`scaleValues: ${scaleValues}`);
-
     return scaleValues;
   }
 
