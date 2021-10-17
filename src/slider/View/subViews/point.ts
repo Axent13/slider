@@ -1,14 +1,17 @@
 interface IPoint {
   isStart: boolean;
+  isVertical: boolean;
 }
 
 class Point {
   isStart: boolean;
+  isVertical: boolean;
   $pointElement: HTMLElement;
   $tipElement: HTMLElement;
 
   constructor(options: IPoint) {
     this.isStart = options.isStart;
+    this.isVertical = options.isVertical || false;
 
     this.$pointElement = this.createPointElement();
     this.$tipElement = this.createTipElement();
@@ -30,9 +33,9 @@ class Point {
         'js-slider__point_position_end',
       );
     }
-    // if (this.isVertical) {
-    //   $pointElement.classList.add('slider__point_position_start_vertical');
-    // }
+    if (this.isVertical) {
+      $pointElement.classList.add('slider__point_position_start_vertical');
+    }
 
     return $pointElement;
   }

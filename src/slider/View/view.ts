@@ -44,14 +44,20 @@ class View extends Observer {
     this.$sliderLimitValuesElement.append(this.endLimitValueElement.$limitValueElement);
     this.$sliderElement.append(this.$sliderLimitValuesElement);
 
-    this.backgroundLineElement = new BackgroundLine();
-    this.rangeLineElement = new RangeLine();
+    this.backgroundLineElement = new BackgroundLine({
+      isVertical: this.isVertical,
+    });
+    this.rangeLineElement = new RangeLine({
+      isVertical: this.isVertical,
+    });
 
     this.startPointElement = new Point({
       isStart: true,
+      isVertical: this.isVertical,
     });
     this.endPointElement = new Point({
       isStart: false,
+      isVertical: this.isVertical,
     });
 
     this.rangeLineElement.$rangeLineElement.append(this.startPointElement.$pointElement);
