@@ -1,7 +1,8 @@
 import Observer from '../Observer/observer.ts';
 import Scale from './subViews/scale.ts';
 import Point from './subViews/point.ts';
-import LimitElement from './subViews/limitValue.ts';
+import LimitValue from './subViews/limitValue.ts';
+import BackgroundLine from './subViews/backgroundLine.ts';
 
 interface IViewOptions {
   $rootElement: HTMLElement;
@@ -17,9 +18,9 @@ class View extends Observer {
   scalePoints: number;
   $sliderElement: HTMLElement;
   $sliderLimitValuesElement: HTMLElement;
-  startLimitValueElement: LimitElement;
-  endLimitValueElement: LimitElement;
-  $backgroundLineElement: HTMLElement;
+  startLimitValueElement: LimitValue;
+  endLimitValueElement: LimitValue;
+  backgroundLineElement: BackgroundLine;
   $rangeLineElement: HTMLElement;
   startPointElement: Point;
   endPointElement: Point;
@@ -34,14 +35,15 @@ class View extends Observer {
     this.scalePoints = options.scalePoints || 5;
 
     this.$sliderElement = View.createSliderElement();
+
     this.$sliderLimitValuesElement = View.createSliderValuesElement();
-    this.startLimitValueElement = new LimitElement();
+    this.startLimitValueElement = new LimitValue();
     this.$sliderLimitValuesElement.append(this.startLimitValueElement.$limitValueElement);
-    this.endLimitValueElement = new LimitElement();
+    this.endLimitValueElement = new LimitValue();
     this.$sliderLimitValuesElement.append(this.endLimitValueElement.$limitValueElement);
     this.$sliderElement.append(this.$sliderLimitValuesElement);
 
-    this.$backgroundLineElement = this.createBackgroundLineElement();
+    this.backgroundLineElement = new BackgroundLine();
     this.$rangeLineElement = this.createRangeLineElement();
 
     this.startPointElement = new Point({
@@ -53,8 +55,9 @@ class View extends Observer {
 
     this.$rangeLineElement.append(this.startPointElement.$pointElement);
     this.$rangeLineElement.append(this.endPointElement.$pointElement);
-    this.$backgroundLineElement.append(this.$rangeLineElement);
-    this.$sliderElement.append(this.$backgroundLineElement);
+
+    this.backgroundLineElement.$backgroundLineElement.append(this.$rangeLineElement);
+    this.$sliderElement.append(this.backgroundLineElement.$backgroundLineElement);
 
     this.scaleElement = new Scale({
       $sliderElement: this.$sliderElement,
@@ -87,16 +90,6 @@ class View extends Observer {
     $sliderLimitValuesElement.classList.add('slider__limit-values');
 
     return $sliderLimitValuesElement;
-  }
-
-  createBackgroundLineElement() {
-    const $backgroundLineElement = document.createElement('div');
-    $backgroundLineElement.classList.add('slider__background-line');
-    if (this.isVertical) {
-      $backgroundLineElement.classList.add('slider__background-line_vertical');
-    }
-
-    return $backgroundLineElement;
   }
 
   createRangeLineElement() {
@@ -166,7 +159,7 @@ class View extends Observer {
 
     if (this.isVertical) {
       const sliderStartCoordinate = $(this.$rootElement).offset()?.top || 0;
-      const backgroundLineHeight = $(this.$backgroundLineElement).height() || 0;
+      const backgroundLineHeight = $(this.backgroundLineElement.$backgroundLineElement).height() || 0;
 
       // Вычисляю координаты середины выделенной области слайдера,
       // чтобы определить, ближе к какому из бегунков был совершен клик
@@ -208,7 +201,7 @@ class View extends Observer {
     let newStartPointPostion = null;
     if (this.isVertical) {
       const sliderStartCoordinate = $(this.$rootElement).offset()?.top || 0;
-      const backgroundLineHeight = $(this.$backgroundLineElement).height() || 0;
+      const backgroundLineHeight = $(this.backgroundLineElement.$backgroundLineElement).height() || 0;
       const mouseCoordinateInPercents = ((event.pageY - sliderStartCoordinate) * 100) / backgroundLineHeight;
 
       newStartPointPostion = mouseCoordinateInPercents;
@@ -246,7 +239,7 @@ class View extends Observer {
     let newEndPointPostion = null;
     if (this.isVertical) {
       const sliderStartCoordinate = $(this.$rootElement).offset()?.top || 0;
-      const backgroundLineHeight = $(this.$backgroundLineElement).height() || 0;
+      const backgroundLineHeight = $(this.backgroundLineElement.$backgroundLineElement).height() || 0;
       const mouseCoordinateInPercents = ((event.pageY - sliderStartCoordinate) * 100) / backgroundLineHeight;
 
       newEndPointPostion = mouseCoordinateInPercents;
