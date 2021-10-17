@@ -1,5 +1,6 @@
 import Observer from '../Observer/observer.ts';
 import Scale from '../View/subViews/scale.ts';
+import Point from './subViews/point.ts';
 
 interface IViewOptions {
   $rootElement: HTMLElement;
@@ -20,10 +21,8 @@ class View extends Observer {
   $endLimitValueElement: HTMLElement;
   $backgroundLineElement: HTMLElement;
   $rangeLineElement: HTMLElement;
-  $startPointElement: HTMLElement;
-  $startTipElement: HTMLElement;
-  $endPointElement: HTMLElement;
-  $endTipElement: HTMLElement;
+  startPointElement: Point;
+  endPointElement: Point;
   scaleElement: Scale;
 
   constructor(options: IViewOptions) {
@@ -46,14 +45,16 @@ class View extends Observer {
 
     this.$backgroundLineElement = this.createBackgroundLineElement();
     this.$rangeLineElement = this.createRangeLineElement();
-    this.$startPointElement = this.createStartPointElement();
-    this.$startTipElement = View.createStartTipElement();
-    this.$startPointElement.append(this.$startTipElement);
-    this.$endPointElement = this.createEndPointElement();
-    this.$endTipElement = View.createEndTipElement();
-    this.$endPointElement.append(this.$endTipElement);
-    this.$rangeLineElement.append(this.$startPointElement);
-    this.$rangeLineElement.append(this.$endPointElement);
+
+    this.startPointElement = new Point({
+      isStart: true,
+    });
+    this.endPointElement = new Point({
+      isStart: false,
+    });
+
+    this.$rangeLineElement.append(this.startPointElement.$pointElement);
+    this.$rangeLineElement.append(this.endPointElement.$pointElement);
     this.$backgroundLineElement.append(this.$rangeLineElement);
     this.$sliderElement.append(this.$backgroundLineElement);
 
@@ -131,62 +132,12 @@ class View extends Observer {
     return $rangeLineElement;
   }
 
-  createStartPointElement() {
-    const $startPointElement = document.createElement('div');
-    $startPointElement.classList.add(
-      'slider__point',
-      'slider__point_position_start',
-      'js-slider__point_position_start',
-    );
-    if (this.isVertical) {
-      $startPointElement.classList.add('slider__point_position_start_vertical');
-    }
-
-    return $startPointElement;
-  }
-
-  static createStartTipElement() {
-    const $startTipElement = document.createElement('div');
-    $startTipElement.classList.add(
-      'slider__tip',
-      'slider__tip_position_start',
-      'js-slider__tip_position_start',
-    );
-
-    return $startTipElement;
-  }
-
   setScaleValues(scaleValues: number[]) {
     this.scaleElement.setScaleValues(scaleValues);
   }
 
   getScalePoints() {
     return this.scaleElement.getScalePoints();
-  }
-
-  createEndPointElement() {
-    const $endPointElement = document.createElement('div');
-    $endPointElement.classList.add(
-      'slider__point',
-      'slider__point_position_end',
-      'js-slider__point_position_end',
-    );
-    if (this.isVertical) {
-      $endPointElement.classList.add('slider__point_position_end_vertical');
-    }
-
-    return $endPointElement;
-  }
-
-  static createEndTipElement() {
-    const $endTipElement = document.createElement('div');
-    $endTipElement.classList.add(
-      'slider__tip',
-      'slider__tip_position_end',
-      'js-slider__tip_position_end',
-    );
-
-    return $endTipElement;
   }
 
   setStartPointPosition(coordinate: number) {
@@ -199,7 +150,7 @@ class View extends Observer {
   }
 
   setStartTipValue(value: number) {
-    $(this.$startTipElement).text(value);
+    $(this.startPointElement.$tipElement).text(value);
   }
 
   setStartLimitValue(value: number) {
@@ -217,7 +168,7 @@ class View extends Observer {
   }
 
   setEndTipValue(value: number) {
-    $(this.$endTipElement).text(100 - value);
+    $(this.endPointElement.$tipElement).text(100 - value);
   }
 
   setEndLimitValue(value: number) {
@@ -348,8 +299,8 @@ class View extends Observer {
 
   _initEventListeners() {
     $(this.$sliderElement).on('mousedown', this._handleSliderClick);
-    $(this.$startPointElement).on('mousedown', this._handleStartPointMouseDown);
-    $(this.$endPointElement).on('mousedown', this._handleEndPointMouseDown);
+    $(this.startPointElement.$pointElement).on('mousedown', this._handleStartPointMouseDown);
+    $(this.endPointElement.$pointElement).on('mousedown', this._handleEndPointMouseDown);
   }
 }
 
