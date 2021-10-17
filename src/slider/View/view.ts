@@ -1,6 +1,7 @@
 import Observer from '../Observer/observer.ts';
-import Scale from '../View/subViews/scale.ts';
+import Scale from './subViews/scale.ts';
 import Point from './subViews/point.ts';
+import LimitElement from './subViews/limitValue.ts';
 
 interface IViewOptions {
   $rootElement: HTMLElement;
@@ -15,9 +16,9 @@ class View extends Observer {
   hasScale: boolean;
   scalePoints: number;
   $sliderElement: HTMLElement;
-  $sliderValuesElement: HTMLElement;
-  $startLimitValueElement: HTMLElement;
-  $endLimitValueElement: HTMLElement;
+  $sliderLimitValuesElement: HTMLElement;
+  startLimitValueElement: LimitElement;
+  endLimitValueElement: LimitElement;
   $backgroundLineElement: HTMLElement;
   $rangeLineElement: HTMLElement;
   startPointElement: Point;
@@ -33,12 +34,12 @@ class View extends Observer {
     this.scalePoints = options.scalePoints || 5;
 
     this.$sliderElement = View.createSliderElement();
-    this.$sliderValuesElement = View.createSliderValuesElement();
-    this.$startLimitValueElement = View.createStartLimitValueElement();
-    this.$sliderValuesElement.append(this.$startLimitValueElement);
-    this.$endLimitValueElement = View.createEndLimitValueElement();
-    this.$sliderValuesElement.append(this.$endLimitValueElement);
-    this.$sliderElement.append(this.$sliderValuesElement);
+    this.$sliderLimitValuesElement = View.createSliderValuesElement();
+    this.startLimitValueElement = new LimitElement();
+    this.$sliderLimitValuesElement.append(this.startLimitValueElement.$limitValueElement);
+    this.endLimitValueElement = new LimitElement();
+    this.$sliderLimitValuesElement.append(this.endLimitValueElement.$limitValueElement);
+    this.$sliderElement.append(this.$sliderLimitValuesElement);
 
     this.$backgroundLineElement = this.createBackgroundLineElement();
     this.$rangeLineElement = this.createRangeLineElement();
@@ -82,31 +83,10 @@ class View extends Observer {
   }
 
   static createSliderValuesElement() {
-    const $sliderValuesElement = document.createElement('div');
-    $sliderValuesElement.classList.add('slider__values');
+    const $sliderLimitValuesElement = document.createElement('div');
+    $sliderLimitValuesElement.classList.add('slider__limit-values');
 
-    return $sliderValuesElement;
-  }
-
-  static createStartLimitValueElement() {
-    const $startLimitValueElement = document.createElement('span');
-    $startLimitValueElement.classList.add('slider__start-limit-value', 'js-slider__start-limit-value');
-
-    return $startLimitValueElement;
-  }
-
-  static createDelimeterElement() {
-    const $delimiterElement = document.createElement('span');
-    $delimiterElement.classList.add('slider__delimiter');
-
-    return $delimiterElement;
-  }
-
-  static createEndLimitValueElement() {
-    const $endLimitValueElement = document.createElement('span');
-    $endLimitValueElement.classList.add('slider__end-limit-value', 'js-slider__end-limit-value');
-
-    return $endLimitValueElement;
+    return $sliderLimitValuesElement;
   }
 
   createBackgroundLineElement() {
@@ -151,7 +131,7 @@ class View extends Observer {
   }
 
   setStartLimitValue(value: number) {
-    $(this.$startLimitValueElement).text(value);
+    $(this.startLimitValueElement.$limitValueElement).text(value);
   }
 
   setEndPointPosition(coordinate: number) {
@@ -169,7 +149,7 @@ class View extends Observer {
   }
 
   setEndLimitValue(value: number) {
-    $(this.$endLimitValueElement).text(value);
+    $(this.endLimitValueElement.$limitValueElement).text(value);
   }
 
   getSliderWidth() {
