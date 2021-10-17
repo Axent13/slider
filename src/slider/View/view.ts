@@ -3,6 +3,7 @@ import Scale from './subViews/scale.ts';
 import Point from './subViews/point.ts';
 import LimitValue from './subViews/limitValue.ts';
 import BackgroundLine from './subViews/backgroundLine.ts';
+import RangeLine from './subViews/rangeLine.ts';
 
 interface IViewOptions {
   $rootElement: HTMLElement;
@@ -21,7 +22,7 @@ class View extends Observer {
   startLimitValueElement: LimitValue;
   endLimitValueElement: LimitValue;
   backgroundLineElement: BackgroundLine;
-  $rangeLineElement: HTMLElement;
+  rangeLineElement: RangeLine;
   startPointElement: Point;
   endPointElement: Point;
   scaleElement: Scale;
@@ -44,7 +45,7 @@ class View extends Observer {
     this.$sliderElement.append(this.$sliderLimitValuesElement);
 
     this.backgroundLineElement = new BackgroundLine();
-    this.$rangeLineElement = this.createRangeLineElement();
+    this.rangeLineElement = new RangeLine();
 
     this.startPointElement = new Point({
       isStart: true,
@@ -53,10 +54,10 @@ class View extends Observer {
       isStart: false,
     });
 
-    this.$rangeLineElement.append(this.startPointElement.$pointElement);
-    this.$rangeLineElement.append(this.endPointElement.$pointElement);
+    this.rangeLineElement.$rangeLineElement.append(this.startPointElement.$pointElement);
+    this.rangeLineElement.$rangeLineElement.append(this.endPointElement.$pointElement);
 
-    this.backgroundLineElement.$backgroundLineElement.append(this.$rangeLineElement);
+    this.backgroundLineElement.$backgroundLineElement.append(this.rangeLineElement.$rangeLineElement);
     this.$sliderElement.append(this.backgroundLineElement.$backgroundLineElement);
 
     this.scaleElement = new Scale({
@@ -92,16 +93,6 @@ class View extends Observer {
     return $sliderLimitValuesElement;
   }
 
-  createRangeLineElement() {
-    const $rangeLineElement = document.createElement('div');
-    $rangeLineElement.classList.add('slider__range-line', 'js-slider__range-line');
-    if (this.isVertical) {
-      $rangeLineElement.classList.add('slider__range-line_vertical');
-    }
-
-    return $rangeLineElement;
-  }
-
   setScaleValues(scaleValues: number[]) {
     this.scaleElement.setScaleValues(scaleValues);
   }
@@ -112,10 +103,10 @@ class View extends Observer {
 
   setStartPointPosition(coordinate: number) {
     if (this.isVertical) {
-      $(this.$rangeLineElement).css('top', `${coordinate}%`);
-      $(this.$rangeLineElement).css('height', `${100 - coordinate}%`);
+      $(this.rangeLineElement.$rangeLineElement).css('top', `${coordinate}%`);
+      $(this.rangeLineElement.$rangeLineElement).css('height', `${100 - coordinate}%`);
     } else {
-      $(this.$rangeLineElement).css('left', `${coordinate}%`);
+      $(this.rangeLineElement.$rangeLineElement).css('left', `${coordinate}%`);
     }
   }
 
@@ -129,11 +120,11 @@ class View extends Observer {
 
   setEndPointPosition(coordinate: number) {
     if (this.isVertical) {
-      const rangeLineCssTopValue = this.$rangeLineElement.style.top;
+      const rangeLineCssTopValue = this.rangeLineElement.$rangeLineElement.style.top;
       const startPointCoordinate = parseInt(rangeLineCssTopValue.slice(0, -1), 10);
-      $(this.$rangeLineElement).css('height', `${coordinate - startPointCoordinate}%`);
+      $(this.rangeLineElement.$rangeLineElement).css('height', `${coordinate - startPointCoordinate}%`);
     } else {
-      $(this.$rangeLineElement).css('right', `${100 - coordinate}%`);
+      $(this.rangeLineElement.$rangeLineElement).css('right', `${100 - coordinate}%`);
     }
   }
 
@@ -163,9 +154,9 @@ class View extends Observer {
 
       // Вычисляю координаты середины выделенной области слайдера,
       // чтобы определить, ближе к какому из бегунков был совершен клик
-      const rangeLineCssTopValue = this.$rangeLineElement.style.top;
+      const rangeLineCssTopValue = this.rangeLineElement.$rangeLineElement.style.top;
       const startPointCoordinate = parseInt(rangeLineCssTopValue.slice(0, -1), 10);
-      const rangeLineCssHeightValue = this.$rangeLineElement.style.height;
+      const rangeLineCssHeightValue = this.rangeLineElement.$rangeLineElement.style.height;
       const endPointCoordinate = parseInt(rangeLineCssHeightValue.slice(0, -1), 10) + startPointCoordinate;
 
       rangeLineCenterCoordinate = (startPointCoordinate + endPointCoordinate) / 2;
@@ -176,9 +167,9 @@ class View extends Observer {
 
       // Вычисляю координаты середины выделенной области слайдера,
       // чтобы определить, ближе к какому из бегунков был совершен клик
-      const rangeLineCssLeftValue = this.$rangeLineElement.style.left;
+      const rangeLineCssLeftValue = this.rangeLineElement.$rangeLineElement.style.left;
       const startPointCoordinate = parseInt(rangeLineCssLeftValue.slice(0, -1), 10);
-      const rangeLineCssRightValue = this.$rangeLineElement.style.right;
+      const rangeLineCssRightValue = this.rangeLineElement.$rangeLineElement.style.right;
       const endPointCoordinate = 100 - parseInt(rangeLineCssRightValue.slice(0, -1), 10);
 
       rangeLineCenterCoordinate = (startPointCoordinate + endPointCoordinate) / 2;
@@ -208,7 +199,7 @@ class View extends Observer {
     } else {
       const sliderStartCoordinate = $(this.$rootElement).offset()?.left || 0;
       const sliderWidth = this.getSliderWidth() || 0;
-      const rangeLineCssRightValue = this.$rangeLineElement.style.right;
+      const rangeLineCssRightValue = this.rangeLineElement.$rangeLineElement.style.right;
       const endPointCoordinate = 100 - parseInt(rangeLineCssRightValue.slice(0, -1), 10);
 
       const mouseCoordinateInPercents = ((event.pageX - sliderStartCoordinate) * 100) / sliderWidth;
@@ -246,7 +237,7 @@ class View extends Observer {
     } else {
       const sliderStartCoordinate = $(this.$rootElement).offset()?.left || 0;
       const sliderWidth = this.getSliderWidth() || 0;
-      const rangeLineCssLeftValue = this.$rangeLineElement.style.left;
+      const rangeLineCssLeftValue = this.rangeLineElement.$rangeLineElement.style.left;
       const startPointCoordinate = parseInt(rangeLineCssLeftValue.slice(0, -1), 10);
 
       const mouseCoordinateInPercents = ((event.pageX - sliderStartCoordinate) * 100) / sliderWidth;
