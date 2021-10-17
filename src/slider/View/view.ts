@@ -1,4 +1,5 @@
 import Observer from '../Observer/observer.ts';
+import Scale from '../View/subViews/scale.ts';
 
 interface IViewOptions {
   $rootElement: HTMLElement;
@@ -23,7 +24,7 @@ class View extends Observer {
   $startTipElement: HTMLElement;
   $endPointElement: HTMLElement;
   $endTipElement: HTMLElement;
-  $scaleElement: HTMLElement;
+  scaleElement: Scale;
 
   constructor(options: IViewOptions) {
     super();
@@ -56,8 +57,12 @@ class View extends Observer {
     this.$backgroundLineElement.append(this.$rangeLineElement);
     this.$sliderElement.append(this.$backgroundLineElement);
 
-    this.$scaleElement = this.createScaleElement();
-    this.$sliderElement.append(this.$scaleElement);
+    this.scaleElement = new Scale({
+      $sliderElement: this.$sliderElement,
+      scalePoints: this.scalePoints,
+    });
+
+    this.$sliderElement.append(this.scaleElement.$scaleElement);
 
     this.$rootElement.append(this.$sliderElement);
 
@@ -151,43 +156,12 @@ class View extends Observer {
     return $startTipElement;
   }
 
-  createScaleElement() {
-    const $scaleElement = document.createElement('div');
-    $scaleElement.classList.add('slider__scale');
-    const $scalePointsElement = document.createElement('div');
-    $scalePointsElement.classList.add('slider__scale-points');
-    const $scaleValuesElement = document.createElement('div');
-    $scaleValuesElement.classList.add('slider__scale-values');
-
-    for (let pointIndex = 0; pointIndex < this.scalePoints - 1; pointIndex += 1) {
-      const $scalePointElement = document.createElement('div');
-      $scalePointElement.classList.add('slider__scale-point');
-      $scalePointsElement.append($scalePointElement);
-    }
-    $scalePointsElement.children[this.scalePoints - 2].classList.add('slider__scale-point_last'); // либо в css поиграться с last-child
-    $scaleElement.appendChild($scalePointsElement);
-
-    for (let valueIndex = 0; valueIndex < this.scalePoints; valueIndex += 1) {
-      const $scaleValueElement = document.createElement('div');
-      $scaleValueElement.classList.add('slider__scale-value');
-      $scaleValuesElement.append($scaleValueElement);
-    }
-    $scaleValuesElement.children[this.scalePoints - 1].classList.add('slider__scale-value_last'); // либо в css поиграться с last-child
-    $scaleElement.appendChild($scaleValuesElement);
-
-    return $scaleElement;
+  setScaleValues(scaleValues: number[]) {
+    this.scaleElement.setScaleValues(scaleValues);
   }
 
   getScalePoints() {
-    return this.scalePoints;
-  }
-
-  setScaleValues(scaleValues: number[]) {
-    const $valuesElement = this.$scaleElement.children[this.$scaleElement.children.length - 1];
-
-    $($valuesElement.children).each((elementIndex, $valueElement) => {
-      $($valueElement).text(`${scaleValues[elementIndex]}`);
-    });
+    return this.scaleElement.getScalePoints();
   }
 
   createEndPointElement() {
