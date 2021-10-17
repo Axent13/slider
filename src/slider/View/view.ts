@@ -17,7 +17,6 @@ class View extends Observer {
   $sliderElement: HTMLElement;
   $sliderValuesElement: HTMLElement;
   $startLimitValueElement: HTMLElement;
-  $delimiterElement: HTMLElement;
   $endLimitValueElement: HTMLElement;
   $backgroundLineElement: HTMLElement;
   $rangeLineElement: HTMLElement;
@@ -37,8 +36,6 @@ class View extends Observer {
     this.$sliderValuesElement = View.createSliderValuesElement();
     this.$startLimitValueElement = View.createStartLimitValueElement();
     this.$sliderValuesElement.append(this.$startLimitValueElement);
-    this.$delimiterElement = View.createDelimeterElement();
-    this.$sliderValuesElement.append(this.$delimiterElement);
     this.$endLimitValueElement = View.createEndLimitValueElement();
     this.$sliderValuesElement.append(this.$endLimitValueElement);
     this.$sliderElement.append(this.$sliderValuesElement);
