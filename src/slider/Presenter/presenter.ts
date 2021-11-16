@@ -114,10 +114,12 @@ class Presenter {
       }
       case 'modelUpdatedMinValue': {
         this.view.setStartLimitValue(action.data);
+        this.view.setScaleValues(this.calculateScaleValues());
         break;
       }
       case 'modelUpdatedMaxValue': {
         this.view.setEndLimitValue(action.data);
+        this.view.setScaleValues(this.calculateScaleValues());
         break;
       }
       default:
