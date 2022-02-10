@@ -1,4 +1,4 @@
-import Observer from '../Observer/observer.ts';
+import Observer from '../Observer/observer';
 
 interface IModelOptions {
   minValue?: number;

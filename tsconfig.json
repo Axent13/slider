@@ -1,14 +1,6 @@
 {
   "compilerOptions": {
-    "outDir": "./dist/",
-    "module": "es6",
-    "target": "es5",
-    "allowJs": true,
+    "sourceMap": true,
     "strict": true,
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitReturns": true,
-    // "noUncheckedIndexedAccess": true, // - выдает ошибку, мол, нет такого свойства...
-    "noUnusedLocals": true,
-    // "noUnusedParameters": true, //- пока что убрал. Непонятно, как использовать тот же самый each для перебора jQuery-элементов, так как он первым параметром требует index, который не нужен
   }
 }

@@ -1,9 +1,9 @@
-import Observer from '../Observer/observer.ts';
-import Scale from './subViews/scale.ts';
-import Point from './subViews/point.ts';
-import LimitValue from './subViews/limitValue.ts';
-import BackgroundLine from './subViews/backgroundLine.ts';
-import RangeLine from './subViews/rangeLine.ts';
+import Observer from '../Observer/observer';
+import Scale from './subViews/scale';
+import Point from './subViews/point';
+import LimitValue from './subViews/limitValue';
+import BackgroundLine from './subViews/backgroundLine';
+import RangeLine from './subViews/rangeLine';
 
 interface IViewOptions {
   $rootElement: HTMLElement;

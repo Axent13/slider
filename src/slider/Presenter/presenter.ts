@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
-import Model from '../Model/model.ts';
-import View from '../View/view.ts';
+import Model from '../Model/model';
+import View from '../View/view';
 
 interface IPresenterOptions {
   step?: number;
